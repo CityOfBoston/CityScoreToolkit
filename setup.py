@@ -3,11 +3,18 @@
 from setuptools import setup
 
 setup(
+    # GETTING-STARTED: set your app name:
     name='YourAppName',
+    # GETTING-STARTED: set your app name:
     version='1.0',
+    # GETTING-STARTED: set your app description:
     description='OpenShift App',
+    # GETTING-STARTED: set author name (your name):
     author='Your Name',
+    # GETTING-STARTED: set author name (your name):
     author_email='example@example.com',
+    # GETTING-STARTED: set author name (your name):
     url='http://www.python.org/sigs/distutils-sig/',
-    install_requires=['Django<=1.4'],
+    # GETTING-STARTED: define required django version:
+    install_requires=['Django<=1.8'],
 )

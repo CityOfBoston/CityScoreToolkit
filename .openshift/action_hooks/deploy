@@ -6,15 +6,22 @@
 
 source $OPENSHIFT_HOMEDIR/python/virtenv/bin/activate
 
-if [ ! -f $OPENSHIFT_DATA_DIR/sqlite3.db ]
+# GETTING-STARTED: change 'db.sqlite3' to your sqlite3 database:
+if [ ! -f $OPENSHIFT_DATA_DIR/db.sqlite3 ]
 then
-    echo "Copying $OPENSHIFT_REPO_DIR/wsgi/openshift/sqlite3.db to $OPENSHIFT_DATA_DIR"
-    cp "$OPENSHIFT_REPO_DIR"wsgi/openshift/sqlite3.db $OPENSHIFT_DATA_DIR
+    # GETTING-STARTED: change 'myproject' to your project name and 'db.sqlite3' to the name of your sqlite3 database:
+    echo "Copying $OPENSHIFT_REPO_DIR/wsgi/myproject/db.sqlite3 to $OPENSHIFT_DATA_DIR"
+    # GETTING-STARTED: change 'myproject' to your project name and 'db.sqlite3' to the name of your sqlite3 database:
+    cp "$OPENSHIFT_REPO_DIR"wsgi/myproject/db.sqlite3 $OPENSHIFT_DATA_DIR
     python "$OPENSHIFT_REPO_DIR".openshift/action_hooks/secure_db.py | tee ${OPENSHIFT_DATA_DIR}/CREDENTIALS
 else
-    echo "Executing 'python $OPENSHIFT_REPO_DIR/wsgi/openshift/manage.py syncdb --noinput'"
-    python "$OPENSHIFT_REPO_DIR"wsgi/openshift/manage.py syncdb --noinput
+    # GETTING-STARTED: change 'myproject' to your project name:
+    echo "Executing 'python $OPENSHIFT_REPO_DIR/wsgi/myproject/manage.py syncdb --noinput'"
+    # GETTING-STARTED: change 'myproject' to your project name:
+    python "$OPENSHIFT_REPO_DIR"wsgi/myproject/manage.py syncdb --noinput
 fi
 
-echo "Executing 'python $OPENSHIFT_REPO_DIR/wsgi/openshift/manage.py collectstatic --noinput'"
-python "$OPENSHIFT_REPO_DIR"wsgi/openshift/manage.py collectstatic --noinput
+# GETTING-STARTED: change 'myproject' to your project name:
+echo "Executing 'python $OPENSHIFT_REPO_DIR/wsgi/myproject/manage.py collectstatic --noinput'"
+# GETTING-STARTED: change 'myproject' to your project name:
+python "$OPENSHIFT_REPO_DIR"wsgi/myproject/manage.py collectstatic --noinput
