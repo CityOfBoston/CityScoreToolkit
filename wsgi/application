@@ -7,14 +7,8 @@ import sys
 os.environ['DJANGO_SETTINGS_MODULE'] = 'myproject.settings'
 ## GETTING-STARTED: make sure the next line points to your django project dir:
 sys.path.append(os.path.join(os.environ['OPENSHIFT_REPO_DIR'], 'wsgi', 'myproject'))
-virtenv = os.environ['APPDIR'] + '/virtenv/'
-## GETTING-STARTED: make sure the next line has the right python version:
-os.environ['PYTHON_EGG_CACHE'] = os.path.join(virtenv, 'lib/python2.7/site-packages')
-virtualenv = os.path.join(virtenv, 'bin/activate_this.py')
-try:
-    execfile(virtualenv, dict(__file__=virtualenv))
-except:
-    pass
+from distutils.sysconfig import get_python_lib
+os.environ['PYTHON_EGG_CACHE'] = get_python_lib()
 
 import django.core.wsgi
 application = django.core.wsgi.get_wsgi_application()

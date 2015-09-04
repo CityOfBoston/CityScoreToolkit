@@ -2,7 +2,7 @@
 
 ## Template App Information
 Product: Django  
-Version: 1.7 
+Version: 1.8.4
 Source:  https://github.com/django/django.git  
 
 ## Maintenance
