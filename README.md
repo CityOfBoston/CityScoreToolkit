@@ -45,9 +45,9 @@ Install the RHC client tools if you have not already done so:
     sudo gem install rhc
     rhc setup
 
-Create a python application
+Select the version of python (2.7 or 3.3) and create a application
 
-    rhc app create django python-2.7
+    rhc app create django python-$VERSION
 
 Add this upstream repo
 
@@ -59,8 +59,8 @@ Then push the repo upstream
 
     git push
 
-Here, the [admin user name and password will be displayed](#admin-user-name-and-password), so pay
-special attention.
+Now, you have to create [admin account](#admin-user-name-and-password), so you 
+can setup your Django instance.
 	
 That's it. You can now checkout your application at:
 
@@ -68,11 +68,10 @@ That's it. You can now checkout your application at:
 
 Admin user name and password
 ----------------------------
-As the `git push` output scrolls by, keep an eye out for a
-line of output that starts with `Django application credentials: `. This line
-contains the generated admin password that you will need to begin
-administering your Django app. This is the only time the password
-will be displayed, so be sure to save it somewhere. You might want 
-to pipe the output of the git push to a text file so you can grep for
-the password later.
+Use `rhc ssh` to log into python gear and run this command:
 
+	python $OPENSHIFT_REPO_DIR/wsgi/myproject/manage.py createsuperuser
+
+You should be now able to login at:
+
+	http://django-$yournamespace.rhcloud.com/admin/
