@@ -1,0 +1,71 @@
+<head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Changa&effect=wallpaper" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/webapp.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=Copse" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.0.0.min.js"   integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0="   crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+<script type = "text/javascript">
+function added(element) {
+    element.className = "button-success";
+}
+function deleted(element) {
+    element.className = "button-error"
+}
+function popitup(htmldoc) {
+    new_window = window.open(htmldoc,'Enter Values','height=200,width=150');
+    if (window.focus) {new_window.focus()}
+        return false;
+}
+</script>
+</head>
+
+<!doctype html>
+<html>
+    <head>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    </head>
+    <h1  class = "font-effect-wallpaper"> CityScore</h1>
+    <div class = container>
+        <h4> Click on a metric to enter values into the database. </h4>
+        <table class="pure-table pure-table-horizontal">
+            <thead>
+                <td>Metric</td>
+                <td>Daily</td>
+                <td>Weekly</td>
+                <td>Monthly</td>
+                <td>Quarterly</td>
+            </thead>
+            {% for metric in city.metric_set.all %}
+            <tr>
+                <form action="." method="post">
+                    <td><input type="hidden" name="metric" value="{{ metric.id }}"/> {% metric.name %} </a></td>
+                    <td> {% metric.calculate_score_day %} </td>
+                    <td> {% metric.calculate_score_week %} </td>
+                    <td> {% metric.calculate_score_month %}</td>
+                    <td> {% metric.calculate_score_year %}</td>
+                    <td><input type = "submit" id="{{metric.name}}" name = "action" value = "Delete" class = "button-success" onclick = "deleted(this)"/> </td>
+                    <td><input type = "submit" id="{{metric.name}}" name = "action" value = "Add Values" class = "button-success" onclick = "return popitup('/cityscore/enter_val')"/> </td>
+                </form>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <table>
+            <thead>
+                <td>Aggregate:</td>
+                <td>{% city.calculate_cityscore_day %}</td>
+                <td>{% city.calculate_cityscore_week %}</td>
+                <td> {% city.calculate_cityscore_month %}</td>
+                <td> {% city.calculate_cityscore_year %}</td>
+            </thead>
+        </table>
+    </div>
+</html>
