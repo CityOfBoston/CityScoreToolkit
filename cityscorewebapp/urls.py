@@ -14,10 +14,22 @@ Including another URLconf
     2. Import the include() function: from django.conf.urls import url, include
     3. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
-from django.conf.urls import url, include
+from django.conf.urls import *
 from django.contrib import admin
+# from cityscore import urls
+from cityscore.cityscore import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 app_name = 'cityscore'
 urlpatterns = [
-    url(r'^admin/', admin.site.urls)
-]
+    url(r'^admin/', admin.site.urls),
+    url(r'^metric/$', views.get_metric, name = 'get_metric'),
+    url(r'^login/$', views.login_pls, name = 'login_pls'),
+    url(r'cityscore/$', views.today_view, name = 'today_view'),
+    url(r'index/$', views.welcome_city, name = 'welcome_city'),
+    url(r'^entry/$',views.get_value, name = 'get_value'),
+    url(r'attn/$', views.attn, name = 'attn'),
+    url(r'^register/$', views.register, name = 'register'),
+    url(r'legend/$', views.legend, name = 'legend')
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) 
