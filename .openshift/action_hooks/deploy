@@ -1,0 +1,20 @@
+#!/bin/bash
+# This deploy hook gets executed after dependencies are resolved and the
+# build hook has been run but before the application has been started back
+# up again.  This script gets executed directly, so it could be python, php,
+# ruby, etc.
+
+if [ ! -f "$OPENSHIFT_DATA_DIR"secrets.json ]; then
+	echo "Generating $OPENSHIFT_DATA_DIR/secrets.json"
+	python "$OPENSHIFT_REPO_DIR"libs/secrets.py > "$OPENSHIFT_DATA_DIR"secrets.json
+fi
+
+# GETTING-STARTED: change 'myproject' to your project name:
+echo "Executing 'python $OPENSHIFT_REPO_DIR/wsgi/myproject/manage.py migrate --noinput'"
+# GETTING-STARTED: change 'myproject' to your project name:
+python "$OPENSHIFT_REPO_DIR"wsgi/myproject/manage.py migrate --noinput
+
+# GETTING-STARTED: change 'myproject' to your project name:
+echo "Executing 'python $OPENSHIFT_REPO_DIR/wsgi/myproject/manage.py collectstatic --noinput'"
+# GETTING-STARTED: change 'myproject' to your project name:
+python "$OPENSHIFT_REPO_DIR"wsgi/myproject/manage.py collectstatic --noinput
