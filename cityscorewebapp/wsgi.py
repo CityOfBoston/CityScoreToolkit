@@ -18,3 +18,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cityscorewebapp.settings")
 #HEROKU
 from dj_static import Cling, MediaCling
 application = Cling(MediaCling(get_wsgi_application()))
+
+from whitenoise.django import DjangoWhiteNoise
+application = DjangoWhiteNoise(application)
