@@ -1,0 +1,190 @@
+/* Font used for titles. */
+$title-font: Montserrat, sans-serif;
+/* Font used anywhere else. */
+$body-font: Lora, sans-serif;
+/* Color used for important text. Not used frequently. */
+$emphatic-color: #FB4D42;
+/* Color used to impart official flavor to the page. Used as a text or backdrop. */
+$official-color: #091F2F;
+/* Font used to add color to pages and make text pop out on bright backgrounds. */
+$highlight-color: #288BE4;
+/* Safe color to use when a mellow grayish background is needed. */
+$supporting-bg-safe-color: #E0E0E0;
+/* Background color in most instances. */
+$bg-color: #F2F2F2;
+
+/* Impart proper spacing to titles.*/
+h4 {
+  margin-top: 25px;
+}
+
+/* Change the default bootstrap row margin and remove it altogether. */
+.row {
+  margin-bottom: 0px;
+}
+
+/* Represents the background for metrics which have enough information,
+ * with an official backdrop and a bright colored white or gray for contrast
+ * in the text itself. */
+#info{
+  background-color:  $official-color;
+  color: #F2F2F2;
+}
+
+/* CSS selector ID for the metrics where there is not enough information to
+ * determine the final score, using the customary background color and an
+ * emphatic red to alert the user. */
+#bad_info{
+  background-color: $bg-color;
+  color: $emphatic-color;
+}
+
+/* CSS selector ID for the metrics which require a follow-up (<1). Changes the
+ * color of the score for these metrics on the cityscore screen to a red.*/
+#bad{
+  color: $emphatic-color;
+}
+
+/* Ensures all columns have a light border that makes them discernible, and
+  * that empty columns add a white space. */
+[class*="col-"] {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  border: 1px solid #ddd;
+  border: 1px solid rgba(86,61,124,.2);
+  font-family: $body-font;
+}
+
+/* Use for columns for which there is to be no border. Good for footers. */
+#borderless{
+  border: none;
+}
+
+/* Adds some spacing and breathing room to horizontal lines. */
+hr {
+  margin-top: 40px;
+  margin-bottom: 0px;
+}
+
+/* Title selectors */
+h1, h3 {
+  font-family: $title-font;
+}
+
+/* Indicates the lead text on the cityscore page. Uses padding and italics to
+ * impart a spacious and officious feel. */
+.lead {
+  font-style: italic;
+  font-family: $body-font;
+  font-size: 100%;
+  padding-bottom: 0px;
+  padding-top: 0px;
+  margin-top: 0px;
+  background-color: $bg-color;
+}
+
+/* Name of the legend-containing infotext area on the cityscore page. */
+#more_info{
+  background-color: $bg-color;
+  border-radius: 20px;
+}
+
+/* Table header text. */
+.tblhead{
+  font-family: $title-font;
+  background-color: #091F2F;
+  color: $official-color;
+}
+
+/* Table entry text. */
+td{
+ font-family: $body-font;
+ vertical-align: middle;
+ font-size:120%;
+}
+
+/* Sets the font for any menu buttons. */
+#menubutt{
+  font-family: $body-font;
+  font-size: 120%;
+}
+
+/* Sets the font of the cycle menu buttons */
+#next{
+  font-family: $title-font;
+}
+
+/* Sets up a highlighted row header for the CITYSCORE row */
+#cscore{
+  font-family: $title-font;
+  background-color: $emphatic-color;
+  color: #FFFFFF;
+}
+#citybutt{
+  font-family: $title-font;
+  font-size: 120;
+}
+
+/* Highlights the name of the city. */
+#special{
+  color: $highlight-color;
+}
+
+/* Legend title */
+.legend{
+  font-family: $title-font;
+}
+
+/* Download button settings */
+#dload{
+  width: 15%;
+  font-family: $body-font;
+}
+
+/* Paragraph text spacing and type */
+p{
+  font-family: $body-font;
+  margin-bottom: 4px;
+}
+
+#welcome-tag{
+  font-family: $title-font;
+  color:  $highlight-color;
+}
+
+#interested{
+  background-color: $highlight-color;
+}
+
+/* Create my acct button */
+#create{
+  background-color: #45789C;
+  font-family: $title-font;
+}
+
+/* City of Boston Freedom Trail Text */
+#top{
+  font-family: $title-font;
+  color:  $emphatic-color;
+}
+
+/* Creates vertical line bordered areas for data entry pages */
+.verticalLine {
+  border-left: thin solid $official-color;
+  font-family: $title-font;
+  text-align: "left";
+}
+
+/* Modifies default bootstrap spacing to make a smoother view */
+[class*="panel"] {
+  font-family: $body-font;
+  color: #45789C;
+  background-color: $bg-color;
+  border-radius: 15px;
+}
+
+/*Custom spacing for several pages */
+#note{
+    margin-left: 10%;
+    margin-right: 10%;
+}

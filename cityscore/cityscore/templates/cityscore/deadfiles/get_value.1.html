@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<head>
+  <!--IMPORT VARIOUS BOOTSTRAP, FONTSTYLE, AND JS DEPENDENCIES-->
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Lora|Montserrat" rel="stylesheet">
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+  <!-- https://silviomoreto.github.io/bootstrap-select/ -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+
+  <style type="text/css">
+    .footer {
+      padding-top: 10px;
+      color: #777;
+      border-top: 1px solid #e5e5e5;
+      padding-bottom: 5px;
+    }
+    
+    [class*="col-"] {
+      font-family: 'Lora', serif;
+    }
+    
+    [class*="panel"] {
+      font-family: 'Lora', serif;
+      color: #45789C;
+      background-color:#F2F2F2;
+      border-radius: 15px;
+    }
+    
+    hr {
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+    
+    h1,
+    h3 {
+      font-family: 'Montserrat', sans-serif;
+    }
+    
+    h4 {
+      font-family: 'Lora';
+      font-style: italic;
+    }
+    
+    .lead {
+      font-style: italic;
+    }
+    
+    .jumbotron {
+      text-align: center;
+      border-bottom: 1px solid #e5e5e5;
+      background: none;
+    }
+    
+    body {
+      width: 80%;
+      padding-left: 100px;
+      padding-right: 100px;
+      border-radius: 25px;
+      border: 2px solid #E0E0E0;
+      margin-left: 10%;
+    }
+    
+    .verticalLine {
+      border-left: thin solid #0C2639;
+      font-family: 'Montserrat', sans-serif;
+      text-align: "left";
+    }
+    
+    .lalign {
+      padding-left: 5px;
+    }
+    
+    .dropdown-menu {
+      padding-top: 5px;
+    }
+    
+    .dropdown-menu label {
+      padding: 0 10px;
+    }
+    
+    .dropdown-menu input {
+      margin-right: 5px;
+      float: left;
+    }
+    
+    .btn-input {
+      display: block;
+    }
+    
+    .btn-input .btn.form-control {
+      text-align: left;
+    }
+    
+    .btn-input .btn.form-control span:first-child {
+      left: 10px;
+      overflow: hidden;
+      position: absolute;
+      right: 25px;
+    }
+    
+    .btn-input .btn.form-control .caret {
+      margin-top: -1px;
+      position: absolute;
+      right: 10px;
+      top: 50%;
+    }
+    
+    .inputfile:focus + label,
+    .inputfile + label:hover {
+      background-color: #D2D2D2;
+    }
+  </style>
+</head>
+
+<body>
+  
+  
+  
+  <div class="jumbotron">
+    <h3> <center>ENTER WHAT YOU'VE MEASURED TODAY. </center></h3>
+    <h4> Note that any pre-existing data must be formatted according to the CityScore <a href="#">data style guide.</a></h4>
+    <br />
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="col-sm-3">
+          <div class="verticalLine">
+            <div class='lalign' align="left">
+                  {% if error %}
+                    <p style="color: red;">YOUR SUBMISSION WAS INVALID.</p>
+                  {% else %}
+                  ENTER YOUR VALUE MANUALLY.
+                  {% endif %}
+            </div>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="btn-group-vertical" role="group" aria-label="...">
+          <form action="/entry/" method="post">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="panel panel-default">
+                <div class="panel-body">
+                  <ul class="nav nav-tabs nav-justified"><li>{{ field.label_tag }}</li> <li>{{field}}</li></ul>
+                </div>
+            </div>
+            {% endfor %}
+            <input type="submit" value="Submit" class = "btn btn-default"/>
+        </form>
+        </div>
+        {% if error_message %}
+        <div class="alert alert-danger" role="alert" id="response" align = "right">
+          <a href="#" class="alert-link">{{error_message}}</a>
+        </div>
+        {% endif %}
+      </div>
+  </div>
+
+      <div class="col-sm-6">
+        <div class="col-sm-3">
+          <div class="verticalLine">
+            <div class='lalign' align="left">
+              USE AN EXISTING DATASOURCE.
+            </div>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+          </div>
+        </div>
+        <div class="col-sm-3">
+          {% csrf_token %}
+          <form class="navbar-form navbar-left" role="search" align="left">
+            <div class="btn-group-vertical" role="group" id = "uploader">
+              <div class="form-group">
+                <label for="sql"><span class="btn btn-default"><a class = "glyphicon glyphicon-pushpin" action = "/upload/server/" onclick = "/upload/server/"></a><a href = "/upload/server/">Enter SQL Server Details</a></span></label>
+                <div class = "row"><ul class="nav nav-tabs nav-justified" id = "selectgroup"><a href = "#"><li><label for = "csv-files">Upload CSV</label><input style= "visibility: hidden; position: absolute;" id="csv-files" class="form-control" type="file" name="csv-files" value = "Upload CSV"></a></li> <li><a id = "upload" name = "upload"  href = "/upload/csv/" method = "POST" style = "padding-bottom:15px;">Commit</a></li></ul></div>
+                <div class = "row"><ul class="nav nav-tabs nav-justified" id = "selectgroup"><a href = "#"><li><label for = "json-files">Select JSON</label><input style= "visibility: hidden; position: absolute;" id="json-files" class="form-control" type="file" name="json-files" value = "Upload CSV"></a></li> <li><a id = "upload" name = "upload"  href = "/upload/json/" method = "POST" role = "button" style = "padding-bottom:15px;">Commit</a></li></ul></div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</body>
+
+
+<footer class="footer">
+  <div class="row">
+    <div class="col-md-6" id="borderless" align='left'>
+      <p>© 2016 City of Boston, Inc. <br><a href="https://pilot.boston.gov/departments/innovation-and-technology">See more</a> about Boston's Dept of Innovation and Technology.</p>
+    </div>
+    <div class='col-md-6' id='borderless' align='right'><img src="http://www.masshome.com/images/seals/bostonseal.gif" width='50' height='50' /></div>
+  </div>
+  <div class='row'>
+    <div class='col-md-4' id='borderless' align='left'></div>
+  </div>
+</footer>

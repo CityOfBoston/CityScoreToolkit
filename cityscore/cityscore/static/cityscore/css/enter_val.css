@@ -1,0 +1,27 @@
+/* Custom page footer */
+.footer {
+  padding-top: 19px;
+  color: #777;
+  border-top: 1px solid #e5e5e5;
+}
+
+h4 {
+  margin-top: 25px;
+}
+
+[class*="col-"] {
+  font-family: 'Lora', serif;
+}
+
+hr {
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+h1, h3 {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.lead {
+  font-style: italic;
+}

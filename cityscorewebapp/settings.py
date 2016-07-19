@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+# import psycopg2
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -38,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    # 'csvimport.app.CSVImportConf', 
+    # 'import_export',
     'cityscorewebapp',
     'cityscore',
 ]
@@ -80,12 +83,31 @@ WSGI_APPLICATION = 'cityscorewebapp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
+import dj_database_url
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    "default": dj_database_url.config()
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+#     # 'default': {
+#     #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#     #     'NAME': os.environ.get('POSTGRES_NAME'),
+#     #     'USER': os.environ.get('POSTGRES_USER'),
+#     #     'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+#     #     'HOST': os.environ.get('POSTGRES_HOST'),
+#     #     'PORT': os.environ.get('POSTGRES_PORT'),
+#     # },
+#     # 'default': {
+#     #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#     #     'NAME': 'postgres',
+#     #     'USER': 'postgres',
+#     #     'HOST': 'db',
+#     #     'PORT': 5432,
+#     # }
+# }
 
 
 # Password validation
@@ -125,9 +147,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR,"workspace/static")
+STATIC_ROOT = os.path.join(BASE_DIR,"static")
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR,'workspace/cityscore/cityscore/static'),
+    os.path.join(BASE_DIR,'cityscore/cityscore/static'),
 ]
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',

@@ -1,0 +1,6 @@
+{
+  "name": "cityscorewebapp",
+  "description": "An example app.json for container-deploy",
+  "image": "heroku/python",
+  "addons": [ "heroku-mysql" ]
+}

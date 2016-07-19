@@ -1,0 +1,9 @@
+Django
+matplotlib
+numpy
+scipy
+datetime
+simplejson
+psycopg2
+django-toolbelt
+mpld3

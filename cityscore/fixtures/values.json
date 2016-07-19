@@ -1,0 +1,33 @@
+[
+    
+  {
+    "model": "cityscore.value",
+    "id": 1,
+    "fields": {
+      "val": 1000,
+      "entry_date": "2012-04-23",
+      "metric": 1,
+      "city": 1
+    }
+  },
+  {
+    "model": "cityscore.value",
+    "id": 2,
+    "fields": {
+      "val": 9000,
+      "entry_date": "2012-04-27",
+      "metric": 1,
+      "city": 1
+    }
+  },
+  {
+    "model": "cityscore.value",
+    "id": 3,
+    "fields": {
+      "val": 12000,
+      "entry_date": "2012-04-28",
+      "metric": 1,
+      "city": 1
+    }
+  }
+]

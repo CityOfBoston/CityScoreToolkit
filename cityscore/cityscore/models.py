@@ -27,8 +27,11 @@ class City(models.Model):
         metrics = self.metric_set.filter(city = self.pk)
         score_set = []
         for m in metrics:
-            if m.numVals > 1:
-                score_set.append(m.calculate_score_day)
+            if m.numVals > 0:
+                if m.trend and m.calculate_score_day == "N/A":
+                    pass
+                else:
+                    score_set.append(m.calculate_score_day)
         if len(score_set) > 1:
             return math.ceil(np.mean(score_set)*100)/100
         elif len(score_set) == 1:
@@ -41,14 +44,16 @@ class City(models.Model):
         metrics = self.metric_set.filter(city = self.pk)
         score_set = []
         for m in metrics:
-            if m.numVals > 1:
+            if m.numVals > 0:
                 score_set.append(m.calculate_score_week)
         if len(score_set) > 1:
             for i, x in enumerate(score_set):
-                score_set[i] = float(x) if '.' in x else int(x)
+                if x is None or math.isnan(x):
+                    pass
+                score_set[i] = x
             return math.ceil(np.mean(score_set)*100)/100
         elif len(score_set) == 1:
-            return math.ceil(score_set[0]*100)/100
+            return math.ceil(float(score_set[0])*100)/100
         else:
             return "Enter Values!"
         
@@ -57,14 +62,14 @@ class City(models.Model):
         metrics = self.metric_set.filter(city = self.pk)
         score_set = []
         for m in metrics:
-            if m.numVals > 1:
+            if m.numVals > 0:
                 score_set.append(m.calculate_score_month)
         if len(score_set) > 1:
             for i, x in enumerate(score_set):
-                score_set[i] = float(x) if '.' in x else int(x)
+                score_set[i] = x
             return math.ceil(np.mean(score_set)*100)/100
         elif len(score_set) == 1:
-            return math.ceil(score_set[0]*100)/100
+            return math.ceil(float(score_set[0])*100)/100
         else:
             return "Enter Values!"
         
@@ -73,14 +78,14 @@ class City(models.Model):
         metrics = self.metric_set.filter(city = self.pk)
         score_set = []
         for m in metrics:
-            if m.numVals > 1:
+            if m.numVals > 0:
                 score_set.append(m.calculate_score_quarter)
         if len(score_set) > 1:
             for i, x in enumerate(score_set):
-                score_set[i] = float(x) if '.' in x else int(x)
+                score_set[i] = x
             return math.ceil(np.mean(score_set)*100)/100
         elif len(score_set) == 1:
-            return math.ceil(score_set[0]*100)/100
+            return math.ceil(float(score_set[0])*100)/100
         else:
             return "Enter Values!"
         
@@ -90,7 +95,9 @@ class City(models.Model):
         score_set = []
         id_set = []
         for m in metrics:
-            if m.numVals > 1:
+            if m.trend and m.calculate_score_week == 0:
+                pass
+            if m.numVals > 0:
                 score_set.append(m.calculate_score_week)
                 id_set.append(m.id)
         ordered_metrics = [i[1] for i in sorted(enumerate(score_set), key=lambda x:x[1], reverse = True)]
@@ -112,7 +119,9 @@ class City(models.Model):
         score_set = []
         id_set = []
         for m in metrics:
-            if m.numVals > 1:
+            if m.trend and m.calculate_score_week == 0:
+                continue
+            if m.numVals > 0:
                 score_set.append(m.calculate_score_week)
                 id_set.append(m.id)
         ordered_metrics = [i[1] for i in sorted(enumerate(score_set), key=lambda x:x[1])]
@@ -133,7 +142,7 @@ class City(models.Model):
         metrics = self.metric_set.filter(city = self.pk)
         score_set = []
         for m in metrics:
-            if m.numVals > 1:
+            if m.numVals > 0:
                 score_set.append(m.calculate_percentile)
         if len(score_set) > 1:
             return math.ceil(np.mean(score_set)*100)/100
@@ -141,6 +150,19 @@ class City(models.Model):
             return math.ceil(score_set[0]*100)/100
         else:
             return "Enter Values!"
+    
+    @property
+    def last_entered_date(self):
+        metric = self.metric_set.filter(city = self.pk)
+        if len(metric) > 0:
+            recent_metric = metric[0]
+            for m in metric:
+                if m.last_entered_date is not None:
+                    if m.last_entered_date > recent_metric.last_entered_date:
+                        recent_metric = m
+            return recent_metric.last_entered_date
+        else:
+            return "N/A"
 
 #REPRESENTS ONE PERFORMANCE MANAGEMENT INDICATOR WHICH CAN SUPPORT ANY NUMBER OF 
 #MEASUREMENTS. REQUIRES BASIC DEFINITIONS AND IMPORTANTLY, INDICATORS OF HOW TO 
@@ -156,31 +178,49 @@ class Metric(models.Model):
                                     default = 1
                                     )
     historic = models.BooleanField(
-                                    "Check the box if you lack a target for this metric. If checked, you will not be able to generate scores for this metric without at least a year of data, at which point we will automatically calculate the target.", 
+                                    "Check the box if you lack a target for this metric. If checked, we will not be able to generate truly accurate scores for this metric without at least a quarter of data, but after at least 90 data values are entered we can automatically calculate a moving target that is responsive to your city's historic performance.", 
                                     default = 0
                                     )
-    target = models.FloatField("What is the target value? (Leave as 1 if the above is checked.)")
+    target = models.FloatField("What is the target value? If this metric is historic (i.e., the above is checked), give an estimate for an average value you expect for this metric or a pre-existing historical average, and we will pick up calculations once we have enough data. (This can be changed later!)")
     city = models.ForeignKey(
         City,
         on_delete = models.PROTECT,
         verbose_name = "city"
     )
-    
+    trend = models.BooleanField(
+                                "Check this box if this metric is measured on a long-term basis (ex. homicides). This means that there may be days where the value is zero, for which the score is not relevant.", 
+                                default = 0
+                                )
     scoreList = []
     
     @property 
     def get_score_list(self):
+        self.set_historic_target
         v_set = []
+        # prints.stderr, self.target
         for v in self.value_set.filter(metric_id = self.id):
             v_set.append(v.val)
         scores = []
         for i in v_set:
-            if self.direction:
-                scores.append(i/self.target)
+            if i == 0 and self.trend:
+                scores.append(None)
+            elif i == 0:
+                scores.append(0)
             else:
-                scores.append(self.target/i)
+                if self.direction:
+                    scores.append(i/self.target)
+                else:
+                    scores.append(self.target/i)
         return scores
-
+    
+    @property
+    def last_entered_date(self):
+        if(self.numVals > 0):
+            current = self.value_set.filter(metric = self.id).order_by('-entry_date')[0]
+            return current.entry_date
+        else:
+            "N/A"
+        
     @property
     def numVals(self):
         vals = self.value_set.filter(metric_id = self.id)
@@ -188,135 +228,212 @@ class Metric(models.Model):
         
     @property
     def calculate_score_day(self):
-        self.set_historic_target
+        # print >>sys.stderr, self.name
         current = self.value_set.filter(metric = self.id).order_by('-entry_date')[0]
-        score = current.val/self.target
-        if self.direction == 1:
-            return math.ceil(score*100)/100
-        elif self.numVals < 2:
-            return math.ceil(score*100)/100
+        if self.trend and current.val == 0:
+            return "N/A"
         else:
-            score = 1/score
-            return math.ceil(score*100)/100
+            if self.numVals > 0:
+                self.set_historic_target
+                score = current.val/self.target
+                if self.direction == 1:
+                    return math.ceil(score*100)/100
+                elif self.numVals < 2:
+                    return math.ceil(score*100)/100
+                else:
+                    score = 1/score if score != 0 else 0
+                    return math.ceil(score*100)/100
+            else:
+                return 0
     
     @property
     def get_week_set(self):
-        current = self.value_set.filter(metric = self.id).order_by('-entry_date')[0]
-        week = [current.entry_date - datetime.timedelta(days=x) for x in range(7)]
-        e_date = []
-        for v in self.value_set.filter(metric_id = self.id):
-            e_date.append(v.entry_date)
-        week_set = [e in week for e in e_date]
-        return week_set
+        if self.numVals > 0:
+            current = self.value_set.filter(metric = self.id).order_by('-entry_date')[0]
+            week = [current.entry_date - datetime.timedelta(days=x) for x in range(7)]
+            e_date = []
+            for v in self.value_set.filter(metric_id = self.id):
+                e_date.append(v.entry_date)
+            week_set = [e in week for e in e_date]
+            return week_set
+        else:
+            return 0
     
     @property
     def calculate_score_week(self):
-        self.set_historic_target
-        week_set = self.get_week_set
-        v_set = []
-        for index, v in enumerate(self.value_set.filter(metric_id = self.id)):
-            if week_set[index]:
-                v_set.append(v.val)
-        score = np.mean(v_set)/self.target
-        if self.direction == 1:
-            return ("%.2f" % score)
+        if self.numVals > 0:
+            self.set_historic_target
+            week_set = self.get_week_set
+            v_set = []
+            for index, v in enumerate(self.value_set.filter(metric_id = self.id)):
+                if week_set[index]:
+                    v_set.append(v.val)
+            if sum(v_set) == 0:
+                return 0
+            score = np.mean(v_set)/self.target
+            if self.direction == 1:
+                return math.ceil(score*100)/100
+            else:
+                if score == 0:
+                    return 0
+                else: 
+                    score = 1/score
+                    return math.ceil(score*100)/100
         else:
-            score = 1/score
-            return ("%.2f" % score)
+            return 0
     
     @property
     def get_month_set(self):
-        current = self.value_set.filter(metric = self.id).order_by('-entry_date')[0]
-        month = [current.entry_date - datetime.timedelta(days=x) for x in range(30)]
-        e_date = []
-        for v in self.value_set.filter(metric_id = self.id):
-            e_date.append(v.entry_date)
-        month_set = [e in month for e in e_date]
-        return month_set
+        if self.numVals > 0:
+            current = self.value_set.filter(metric = self.id).order_by('-entry_date')[0]
+            month = [current.entry_date - datetime.timedelta(days=x) for x in range(30)]
+            e_date = []
+            for v in self.value_set.filter(metric_id = self.id):
+                e_date.append(v.entry_date)
+            month_set = [e in month for e in e_date]
+            return month_set
+        else:
+            return 0
     
     @property
     def calculate_score_month(self):
-        self.set_historic_target
-        month_set = self.get_month_set
-        v_set = []
-        for index, v in enumerate(self.value_set.filter(metric_id = self.id)):
-            if month_set[index]:
-                v_set.append(v.val)
-        score = np.mean(v_set)/self.target
-        if self.direction == 1:
-            return ("%.2f" % score)
+        if self.numVals > 0:
+            self.set_historic_target
+            month_set = self.get_month_set
+            v_set = []
+            for index, v in enumerate(self.value_set.filter(metric_id = self.id)):
+                if month_set[index]:
+                    v_set.append(v.val)
+            if sum(v_set) == 0:
+                return 0
+            score = np.mean(v_set)/self.target
+            if self.direction == 1:
+                return math.ceil(score*100)/100
+            else:
+                if score == 0:
+                    return 0
+                else: 
+                    score = 1/score
+                    return math.ceil(score*100)/100
         else:
-            score = 1/score
-            return ("%.2f" % score)
+            return 0
         
     @property 
     def get_quarter_set(self):
-        current = self.value_set.filter(metric = self.id).order_by('-entry_date')[0]
-        quarter = [current.entry_date - datetime.timedelta(days=x) for x in range(90)]
-        e_date = []
-        for v in self.value_set.filter(metric_id = self.id):
-            e_date.append(v.entry_date)
-        quarter_set = [e in quarter for e in e_date]
-        return quarter_set
+        if self.numVals > 0:
+            current = self.value_set.filter(metric = self.id).order_by('-entry_date')[0]
+            quarter = [current.entry_date - datetime.timedelta(days=x) for x in range(90)]
+            e_date = []
+            for v in self.value_set.filter(metric_id = self.id):
+                e_date.append(v.entry_date)
+            quarter_set = [e in quarter for e in e_date]
+            return quarter_set
+        else:
+            return 0
     
     @property
     def calculate_score_quarter(self):
-        self.set_historic_target
-        quarter_set = self.get_quarter_set
-        v_set = []
-        for index, v in enumerate(self.value_set.filter(metric_id = self.id)):
-            if quarter_set[index]:
-                v_set.append(v.val)
-        score = np.mean(v_set)/self.target
-        if self.direction == 1:
-            return ("%.2f" % score)
+        if self.numVals > 0:
+            self.set_historic_target
+            quarter_set = self.get_quarter_set
+            v_set = []
+            for index, v in enumerate(self.value_set.filter(metric_id = self.id)):
+                if quarter_set[index]:
+                    v_set.append(v.val)
+            if sum(v_set) == 0:
+                return 0
+            score = np.mean(v_set)/self.target
+            if self.direction == 1:
+                return math.ceil(score*100)/100
+            else:
+                if score == 0:
+                    return 0
+                else: 
+                    score = 1/score
+                    return math.ceil(score*100)/100
         else:
-            score = 1/score
-            return ("%.2f" % score) 
+            return 0
     
     @property
     def calculate_percentile(self):
-        self.set_historic_target
-        v_set = []
-        for v in self.value_set.filter(metric_id = self.id):
-            v_set.append(v.val)
-        this_val = self.value_set.filter(metric = self.id).order_by('-entry_date')[0]
-        this_score = this_val.val/self.target if self.direction else self.target/this_val.val
-        scores = []
-        for i in v_set:
-            if self.direction:
-                scores.append(i/self.target)
+        if self.numVals > 0:
+            self.set_historic_target
+            v_set = []
+            for v in self.value_set.filter(metric_id = self.id):
+                v_set.append(v.val)
+            this_val = self.value_set.filter(metric = self.id).order_by('-entry_date')[0]
+            if this_val.val != 0:
+                this_score = this_val.val/self.target if self.direction else self.target/this_val.val
             else:
-                scores.append(self.target/i)
-        ptile = scipy.stats.percentileofscore(scores,this_score, 'rank')
-        return math.ceil(ptile*100)/100
-        
+                this_score = this_val.val/self.target if self.direction else None
+            scores = []
+            for i in v_set:
+                if self.direction:
+                    scores.append(i/self.target)
+                else:
+                    if i != 0:
+                        scores.append(self.target/i)
+                    else:
+                        pass
+            if sum(scores) == 0 or len(scores) == 0:
+                ptile = 100
+            else:
+                ptile = scipy.stats.percentileofscore(scores,this_score, 'rank')
+            return math.ceil(ptile*100)/100
+        else:
+            return 0
+    
+    @property
+    def calculate_prev_month_set(self):
+        current = self.value_set.filter(metric = self.id).order_by('-entry_date')[0]
+        prev_month = [current.entry_date - datetime.timedelta(days=x) for x in range(365, 365 + 90)]
+        e_date = []
+        for v in self.value_set.filter(metric_id = self.id):
+            e_date.append(v.entry_date)
+        prev_month_set = [e in prev_month for e in e_date]
+        return prev_month_set
+            
     @property
     def set_historic_target(self):
-        vals = self.value_set.filter(metric = self.pk)
-        value_list = []
-        for v in vals:
-            value_list.append(v.val)
-        if self.historic:
-            if self.target == 0:
-                self.target = 1
-            if self.numVals > 90 :
-                avg = np.mean(value_list)
-                std = np.std(value_list)
-                if self.direction == 1:
-                    self.target = abs(avg - std)
-                else:
-                    self.target = avg + std
+        if self.historic == 1:
+            vals = self.value_set.filter(metric = self.pk)
+            value_list = []
+            if self.trend and self.numVals > 365:
+                prev_month_set = self.calculate_prev_month_set
+                v_set = []
+                for index, v in enumerate(self.value_set.filter(metric_id = self.id)):
+                    if prev_month_set[index]:
+                        v_set.append(v.val)
+                self.target = np.mean(v_set)
+                return self.save()
             else:
-                avg = np.mean(value_list)
-                std = np.std(value_list)
-                if self.direction == 1:
-                    self.target = abs(avg - std)
+                for v in vals:
+                    value_list.append(v.val)
+                if self.historic:
+                    if self.target == 0:
+                        self.target = 1
+                        return self.save()
+                    if self.numVals > 90 :
+                        avg = np.mean(value_list)
+                        std = np.std(value_list)
+                        if self.direction == 1:
+                            self.target = abs(avg - std)
+                            return self.save()
+                        else:
+                            self.target = avg + std
+                            return self.save()
+                    else:
+                        pass
                 else:
-                    self.target = avg + std
-        else:
-            pass
+                        pass
+                if self.target == 0:
+                    self.target = 1
+                    return self.save()
     
+    @property
+    def entered(self):
+        return self.numVals > 0
+        
     def __str__(self):
         return self.name
  
@@ -343,7 +460,7 @@ class Value(models.Model):
     def _get_quarter(self):
         return (self.entry_date.month - 1)//3 + 1
     def __str__(self):
-        return self.val
+        return str(self.val)
     quarter = property(_get_quarter)
     @property
     def _get_month(self):

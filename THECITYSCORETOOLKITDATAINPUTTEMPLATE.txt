@@ -1,0 +1,157 @@
+﻿THE CITYSCORE TOOLKIT DATA INPUT TEMPLATE
+
+
+
+
+
+
+  
+
+
+
+
+
+Produced by the City of Boston Dept. of Innovation and Technology
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+This template guide contains a series of instructional examples, each of which indicates a way to input bulk data into the CityScore toolkit. The data which the toolkit can process MUST be in these formats, or you will be unable to use it for your performance management. We also included in the template package a CSV, YAML, and JSON empty template that gets you started and is easy to copy-and-paste. You can choose to upload your data in this format or manually enter the data through our toolkit's forms.
+
+
+________________
+
+
+1. DATASET STRUCTURE OVERVIEW
+
+
+The dataset in the core toolkit contains three “types” of data:
+1. City: this information is anything that every single calculation will require (e.g., population if you are assessing only population metrics). This data structure is left blank in the bare toolkit, but modifications are easy to make. The data structure is used to calculate citywide (or organization-wide) calculations like the final cityscore.
+2. Metric: this type is equivalent to a single performance measurement/indicator. It contains information about the indicator as well as its performance score. An example of a metric would be the number of library users the city has on a given day. Modifications should likely be minimal at this level of the data structure as it contains the core scoring functionality and the necessary information to conduct that calculation. The city and value datatypes are flexible enough to make changing this data structure unnecessary.
+3. Value: this type contains two critical pieces of information, the value of a metric on a given day and the date when that measurement was taken. More information can be added to this model to give more information about the value. For example, if the toolkit is used by a city with irregular data feeds, you can create a new information field in this structure which records whether or not the data collection on that day was reliable. That way, you can weed out unreliable data or know where to look if the final numbers look odd.
+
+
+As the definitions suggest, a city “contains” a set of metrics, and a metric contains a “set” of values. This allows the metric to aggregate any inputted values and calculate information from those values. Similarly, the city aggregates metrics to calculate citywide data.
+
+
+Each datatype contains a few pieces of information (in technical terms, a few fields) and a few calculated values:
+
+
+City
+-Fields-
+City name: the name of the city.
+User: the user tied to the city (this information is for login purposes and to make sure if cities share data they can compartmentalize the information shared)
+-Calculations-
+CityScore: the value of the citywide score for the day, week, month, and quarter.
+Percentile: the percentile value of the cityscore in relation to past cityscores.
+Exceeding and Follow-up: the 5 best- and worst-performing metrics, respectively, in the city
+--Foreign Keys--
+User
+
+
+
+
+
+
+Metric
+-Fields-
+Name: the name of the metric
+Definition: the precise definition of how the measurement is conducted (e.g., when in the process a timer was started if a city is measuring response times for emergency services)
+Direction: whether the performance metric should optimally rise or fall. For example, a city wants more Library Users daily, but wants fewer homicides daily.
+Historic: whether the target value for the metric should be calculated from the pre-existing data. If this field is marked as false, the city is asked to provide a target value for the data.
+Target: the target value of the metric if the city has a performance target set.
+-Calculations-
+Score: the individual metric performance compared to its target calculated for the day, week, month, or quarter. 
+Historic Target: calculates the historically-determined target value for this metric using the distribution of past values.
+--Foreign Keys--
+City
+
+
+Value
+Value: the numeric value of the input
+Entry Date: the date on which the value was input.
+Metric: the associated metric which this value is measuring
+--Foreign Keys--
+City
+Metric
+
+
+The foreign key information is irrelevant unless you intend to use a SQL database that is pre-existing (Section II) or if you are interested in the database structure. 
+
+
+________________
+
+
+1. FORMATTING UPLOADS
+
+
+The CityScore toolkit accepts a few forms of input aside from manual input, which can be uploaded into the toolkit seamlessly.
+* Comma-Separated Values list (.csv) → easily extracted from an Excel file (Save As → File Format → .csv)
+* JavaScript Object Notation (.json) → easily extracted from existing code or database structures as the (arguably) default way to transfer data between applications
+* SQL Database → given the host name and address as well as any other optional inputs about the SQL database, the application will draw data from a SQL database if this is preferred
+
+
+There are a few style constraints for uploading values this way. This can be changed in the code (contained in the views.py file under the handle_uploaded_file view) if desired, and modified to suit your current database. The easier route may in fact be to reformat the existing data according to the input expectations.
+
+
+Input in a .csv is expecting the following:
+
+
+Value
+	Entry Date
+	Metric
+	9810
+	2016-07-09
+	Smiles
+	
+
+Note some common pitfalls:
+* There is no need to include the header row (the names of the columns)--omit it, or the import will return an error.
+* Dates MUST be in yyyy-mm-dd format. Note this means hyphens as connectors, and that year comes before month, which comes before date. Also, if you are working in Excel, this formatting must be done with a custom date format. To do this, select your dates column. Click the format dropdown in your home menu and select custom at the bottom of the list. Then type “yyyy-mm-dd” and you’re all set.
+
+
+
+
+________________
+
+
+Input in a .json is expecting the following:
+        [
+                {
+                "model": "Value",
+                   "pk": 1,
+                   "fields": {
+                     "val": “9810”,,
+                     "entry_date”: "2010-04-20",
+                        “metric”: “Smiles”
+                    },
+…
+]
+Note some important information:
+* Including the “pk” primary key field will overwrite any data with the identical primary key. It may be simpler to omit the primary key altogether.
+* If you alternatively prefer, you can store this JSON in the fixtures file in the toolkit package. Upon your next running of the toolkit, the fixture will be loaded by default.
+
+
+For creating a SQL database, there is no default ordering or default input format. However, it MUST include all of the data shown in Section I. The calculations can be omitted, as these will be conducted by the server upon recognition that the SQL server has been loaded into the database. However, if there are any primary keys missing, you may face an error that fatally causes the toolkit to fail. Ensure that the data is right then go into the settings.py file and find the DATABASES variable. Replace the default engine with the information corresponding to your own server. If there are any additional options that are required to incorporate your server, you can configure those in the OPTIONS argument as shown in the file.

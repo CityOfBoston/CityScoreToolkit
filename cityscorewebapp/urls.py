@@ -23,7 +23,8 @@ from django.conf.urls.static import static
 
 app_name = 'cityscore'
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    url(r'^$', views.welcome_city),
+    url(r'^admin/$', admin.site.urls),
     url(r'^metric/$', views.get_metric, name = 'get_metric'),
     url(r'^login/$', views.login_pls, name = 'login_pls'),
     url(r'cityscore/$', views.today_view, name = 'today_view'),
@@ -31,5 +32,10 @@ urlpatterns = [
     url(r'^entry/$',views.get_value, name = 'get_value'),
     url(r'attn/$', views.attn, name = 'attn'),
     url(r'^register/$', views.register, name = 'register'),
-    url(r'legend/$', views.legend, name = 'legend')
+    url(r'legend/$', views.legend, name = 'legend'),
+    url(r'^download/cscore/$', views.download_cscore_data, name='download'),
+    url(r'^download/vals/$', views.download_vals_data, name='download'),
+    url(r'^upload/server/$',views.new_server_connection, name = 'upload'),
+    url(r'^analytics/(?P<name>.*)/$',views.analytics_page, name = 'analytics'),
+    url(r'^summarise/(?P<name>.*)/$',views.summarise_analysis, name = 'analytics')
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) 

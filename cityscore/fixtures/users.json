@@ -1,0 +1,40 @@
+[
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$24000$iya0c4eHs3wA$PyKXfCGvZlE/DHCbZOCRPj/V9RaWFNtL3v26cgyL9FQ=",
+        "last_login": "2016-06-25T15:29:54.980Z",
+        "is_superuser": true,
+        "username": "admin",
+        "first_name": "",
+        "last_name": "",
+        "email": "prakash.mishra@boston.gov",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2016-06-20T14:33:24.796Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$24000$gKELwQUn8s3D$9zcg+uEcjneMon4VHYY+GVB2wrVkLLpA0tglSjB6fTI=",
+        "last_login": "2016-06-23T18:44:33Z",
+        "is_superuser": true,
+        "username": "stef",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2016-06-23T18:44:12Z",
+        "groups": [
+            1
+        ],
+        "user_permissions": []
+    }
+}
+]

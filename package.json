@@ -1,0 +1,7 @@
+{
+  "name": "cityscore",
+  "version": "0.1.0",
+  "engines": {
+    "django": 1.9
+  }
+}

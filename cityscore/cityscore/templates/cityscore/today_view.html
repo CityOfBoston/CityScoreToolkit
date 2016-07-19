@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -14,17 +13,21 @@
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 <link href="https://fonts.googleapis.com/css?family=Lora|Montserrat" rel="stylesheet">
+<link rel="icon" 
+      type="image/gif" 
+      href="https://www.costtree.net/sites/default/files/bostonseal.gif">
+<title> CityScore </title>
 <style type="text/css" media = "screen">
     h4 {
       margin-top: 25px;
     }
     .row {
-      margin-bottom: 20px;
+      margin-bottom: 0px;
     }
-    .row .row {
-      margin-top: 10px;
-      margin-bottom: 0;
-    }
+    /*.row .row {*/
+    /*  margin-top: 10px;*/
+    /*  margin-bottom: 0;*/
+    /*}*/
     
     #info{
       background-color:  #0C2639;
@@ -39,17 +42,10 @@
     #bad{
       color: #FB4D42;
     }
-    
-    #info_low{
-      background-color: #FB4D42;
-      color: #FB4D42#51ACFF;
-    }
 
     [class*="col-"] {
       padding-top: 15px;
       padding-bottom: 15px;
-      /*background-color: #eee;
-      background-color: rgba(86,61,124,.15);*/
       border: 1px solid #ddd;
       border: 1px solid rgba(86,61,124,.2);
       font-family: 'Lora', serif;
@@ -72,18 +68,21 @@
       font-style: italic;
       font-family: 'Lora', italic;
       font-size: 100%;
-      padding-bottom: 5px;
-      padding-top: 5px;
+      padding-bottom: 0px;
+      padding-top: 0px;
+      margin-top: 0px;
       background-color:#F2F2F2;
     }
-    #tbl-head{
-      color: #FB4D42;
+    
+    #more_info{
+      background-color:#F2F2F2;
+      border-radius: 20px;
     }
     
     .tblhead{
       font-family: 'Montserrat', sans-serif;
       background-color: #091F2F;
-      color: #000000; 
+      color: #0C2639; 
     }
     
     td{
@@ -120,6 +119,16 @@
     .legend{
       font-family:'Montserrat';
     }
+    
+    #dload{
+      width: 15%;
+      font-family: 'Lora';
+    }
+    
+    p{
+      font-family: 'Lora';
+      margin-bottom: 4px;
+    }
 </style>
 
 </head>
@@ -132,23 +141,42 @@
       <div class="col-md-2" id = "borderless"> <img src = "https://upload.wikimedia.org/wikipedia/commons/a/ab/Logo_TV_2015.png" width = "70" height = "70"/></div>
       <div class="col-md-8" id = "borderless"><h1><center>TODAY IN <div id = "special">{{name}}</div></center></h1></div>
       <div class="cold-md-2" id = "nav">
-      <div class="btn-group" role="group" aria-label="..." style = "align:right;">
-      <button type="button" class="btn btn-default navbar-btn" aria-label="Download Entered Data">
-      <span class="glyphicon glyphicon-circle-arrow-down" aria-hidden="true"></span>
-      </button>
-      <button type="button" class="btn btn-default navbar-btn" aria-label="User Settings">
-      <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-      </button>
-      <button type="button" class="btn btn-default navbar-btn" aria-label="Themes">
-      <span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span>
-      </button>
+      {% if dl_form %}
+      <form action="/download/cscore/"  method="POST">
+          {% csrf_token %}
+          {{ dl_form }}
+              <button type="submit" id = "dload" name = "submit" class="btn btn-default navbar-btn" aria-label="Download Entered Data" align = "right">
+              <span class="glyphicon glyphicon-circle-arrow-down" aria-hidden="true"></span> Download as CSV
+              </button>
+      </form>
+      {% endif %}
+      {% if dl_val_form %}
+      <form action="/download/vals/"  method="POST">
+          {% csrf_token %}
+          {{ dl_val_form }}
+              <button type="submit" id = "dload" name = "submit" class="btn btn-default navbar-btn" aria-label="Download Entered Data" align = "right">
+              <span class="glyphicon glyphicon-circle-arrow-down" aria-hidden="true"></span> Download All Values
+              </button>
+      </form>
+      {% endif %}
+      <!--<button type="button" class="btn btn-default navbar-btn" aria-label="User Settings">-->
+      <!--<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>-->
+      <!--</button>-->
+      <!--<button type="button" class="btn btn-default navbar-btn" aria-label="Themes">-->
+      <!--<span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span>-->
+      <!--</button>-->
       </div>
       </div>
-      <hr />
-      </div>
-      
-      <div class = "row">
-      <p class="lead" align = "center">To view detailed analysis, click on the metric you're interested in. To enter new data, click on any score column. See the <a href = "/legend/">legend</a> for details.</p>
+
+      <div class = "row" id = "more_info">
+      <div class = "col-sm-2" style = "border:none;"> <center><b><p style = "font-family:Montserrat;"> LEGEND </p></b></center><p style = "color:#FB4D42;" align = "center"> < 1 (follow up)</p><p style = "color:#091F2F;" align = "center"> = 1 (maintaining)</p><p style = "color:#288BE4;" align = "center"> > 1 (exceeding)</p></div>
+      <div class = "col-sm-10" style = "border:none; padding-top:10 px;">
+         <center><b><p style = "font-family:Montserrat;"> TODAY'S BRIEF </p></b></center>
+        <p class="lead" align = "center">To view a summary graph, click on the metric you're interested in. To enter new data, click on any score column.<br /> See the <a href = "/legend/">legend</a> for details or
+        <a href = "/metric/">click here</a> to add a new metric.
+        {% if led != None %} You last entered metrics on <b>{{led}}</b>. {% else %} You need to enter values to view cityscore! {% endif %} {%if led < today %} Update your values! {%endif%} <br />
+        Have an idea for cityscore? Contact us!
+        </div>
       </div> 
     </div>
 
@@ -166,54 +194,81 @@
           </tr>
         </thead>
         <tbody>
+        {% if len == 0 %}
+        <div class="alert alert-info" role="alert" id="response" align = "center">
+          <a href="/metric/" class="alert-link">You need to enter some metrics. Click here to get started.</a>
+        </div> 
+        {% endif %}
         {% for m in metrics %}
+        {% if m.entered %}
         <tr>
           <input type="hidden" name="metric" value="{{m.id}}" />
           {% if m.historic and m.numVals < 90 %}
-          <td id = "entry"><a class="list-group-item  list-group-item-info" id = "bad_info" href="/analytics/" role="button" name = "analytics">{{m.name}}</a></td>
+          <td id = "entry"><a class="list-group-item  list-group-item-info" id = "bad_info" href="/summarise/{{m.name|urlencode}}/" method = "GET" role="button" name = "analyze_me">{{m.name}}</a></td>
           {% else %}
-          <td id = "entry"><a class="list-group-item  list-group-item-info" id = "info" href="/analytics/" role="button" name = "analytics">{{m.name}}</a></td>
+          <td id = "entry"><a class="list-group-item  list-group-item-info" id = "info" href="/summarise/{{m.name}}/"  method = "GET" role="button" name = "analyze_me">{{m.name}}</a></td>
           {%endif%}
-          {% if m.calculate_score_day < 1%}
+          {% if m.calculate_score_day < 1 and m.calculate_score_day != "N/A"%}
           <td id = "entry"><a class="list-group-item" id = "bad" href="/entry/" role="button" >{{m.calculate_score_day}}</a></td>
           {% else %}
-          <td id = "entry"><a class="list-group-item" href="/entry/" role="button" >{{m.calculate_score_day}}</a></td>
+          <td id = "entry"><a class="list-group-item" href="/entry/" role="button"  style = "color:#288BE4;">{{m.calculate_score_day}}</a></td>
           {%endif%}
-          {% if m.calculate_score_week < '1.0' %}
+          {% if m.calculate_score_week < 1 and m.calculate_score_day != "N/A"%}
           <td id = "entry"><a class="list-group-item" id = "bad" href="/entry/" role="button" >{{m.calculate_score_week}}</a></td>
           {% else %}
-          <td id = "entry"><a class="list-group-item" href="/entry/" role="button" >{{m.calculate_score_week}}</a></td>
+          <td id = "entry"><a class="list-group-item" href="/entry/" role="button"  style = "color:#288BE4;">{{m.calculate_score_week}}</a></td>
           {%endif%}
-          {% if m.calculate_score_month < '1.0' %}
+          {% if m.calculate_score_month < 1 and m.calculate_score_day != "N/A"%}
           <td id = "entry"><a class="list-group-item" id = "bad" href="/entry/" role="button" >{{m.calculate_score_month}}</a></td>
           {% else %}
-          <td id = "entry"><a class="list-group-item" href="/entry/" role="button" >{{m.calculate_score_month}}</a></td>
+          <td id = "entry"><a class="list-group-item" href="/entry/" role="button"  style = "color:#288BE4;">{{m.calculate_score_month}}</a></td>
           {%endif%}
-          {% if m.calculate_score_quarter < '1.0' %}
+          {% if m.calculate_score_quarter < 1 and m.calculate_score_day != "N/A"%}
           <td id = "entry"><a class="list-group-item" id = "bad" href="/entry/" role="button" >{{m.calculate_score_quarter}}</a></td>
           {% else %}
-          <td id = "entry"><a class="list-group-item" href="/entry/" role="button" >{{m.calculate_score_quarter}}</a></td>
+          <td id = "entry"><a class="list-group-item" href="/entry/" role="button"  style = "color:#288BE4;">{{m.calculate_score_quarter}}</a></td>
           {%endif%}
-          {% if m.calculate_percentile < 70%}
+          {% if m.calculate_percentile <= 50%}
           <td id = "entry"><a class="list-group-item" id = "bad" href="/entry/" role="button" >{{m.calculate_percentile}}</a></td>
           {% else %}
-          <td id = "entry"><a class="list-group-item" href="/entry/" role="button" >{{m.calculate_percentile}}</a></td>
+          <td id = "entry"><a class="list-group-item" href="/entry/" role="button" style = "color:#288BE4;">{{m.calculate_percentile}}</a></td>
           {%endif%}
         </tr>
+        {% endif %}
         {% endfor %}
         <tr>
           <td id = "entry" ><a class="list-group-item  list-group-item-info" id = "cscore" href="/entry/" role="button" ><div id = "citybutt">CITYSCORE</div></a></td>
-          <td id = "entry"><a href="#" class="list-group-item">{{day}}</a> </td>
-          <td id = "entry"><a href="#" class="list-group-item">{{week}}</a></td>
-          <td id = "entry"><a href="#" class="list-group-item">{{month}}</a></td>
-          <td id = "entry"><a href="#" class="list-group-item">{{quarter}}</a></td>
-          <td id = "entry"><a href="#" class="list-group-item">{{ptile}}</a></td>
+          {% if day < 1%}
+          <td id = "entry"><a class="list-group-item" id = "bad" href="/entry/" role="button" >{{day}}</a></td>
+          {% else %}
+          <td id = "entry"><a class="list-group-item" href="/entry/" role="button" style = "color:#288BE4;">{{day}}</a></td>
+          {% endif %}
+          {% if week < 1%}
+          <td id = "entry"><a class="list-group-item" id = "bad" href="/entry/" role="button" >{{week}}</a></td>
+          {% else %}
+          <td id = "entry"><a class="list-group-item" href="/entry/" role="button" style = "color:#288BE4;">{{week}}</a></td>
+          {% endif %}
+          {% if month < 1%}
+          <td id = "entry"><a class="list-group-item" id = "bad" href="/entry/" role="button" >{{month}}</a></td>
+          {% else %}
+          <td id = "entry"><a class="list-group-item" href="/entry/" role="button" style = "color:#288BE4;">{{month}}</a></td>
+          {% endif %}
+          {% if quarter < 1%}
+          <td id = "entry"><a class="list-group-item" id = "bad" href="/entry/" role="button" >{{quarter}}</a></td>
+          {% else %}
+          <td id = "entry"><a class="list-group-item" href="/entry/" role="button" style = "color:#288BE4;">{{quarter}}</a></td>
+          {% endif %}
+          {% if ptile < 50%}
+          <td id = "entry"><a class="list-group-item" id = "bad" href="/entry/" role="button" >{{ptile}}</a></td>
+          {% else %}
+          <td id = "entry"><a class="list-group-item" href="/entry/" role="button" style = "color:#288BE4;">{{ptile}}</a></td>
+          {% endif %}
         </tr>
       </tbody>
     </table>
     <hr>
     <div class="row">
-      <div class="col-md-6" id = "borderless" align = "left"><a href = "/legend/"><div class = "glyphicon glyphicon-chevron-left"><div id = "next">LEGEND</div></div></a></div>
+      <div class="col-md-6" id = "borderless" align = "left"><a href = "/legend/"><div class = "glyphicon glyphicon-chevron-left"><div id = "next">INFO</div></div></a></div>
       <div class="col-md-6" id = "borderless" align = "right"><a href = "/attn/"><div class = "glyphicon glyphicon-chevron-right"><div id = "next">THIS WEEK'S NEEDS</div></div></a></div>
     </div>
     <footer class="footer">

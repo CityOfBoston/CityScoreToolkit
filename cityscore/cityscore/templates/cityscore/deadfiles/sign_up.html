@@ -1,0 +1,33 @@
+<head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.0.0.min.js"   integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0="   crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Changa&effect=wallpaper" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/webapp.css' %}">
+    <link href="https://fonts.googleapis.com/css?family=Copse" rel="stylesheet">
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+</head>
+
+{% block body_block %}
+<div class = "hero-unit">
+    <h1  class = "font-effect-wallpaper">Welcome to CityScore Performance Management Interface</h1>
+    <h3> Created by the City of Boston</h3>
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+    <div class = "container">
+        <form action="{% url 'cityscore:welcome_city' %}" method="post" class = "pure-form-aligned">
+        {% csrf_token %}
+        <input name = "username" type = "text" id = "username" value ="Enter city name." required/>
+        <input name = "pw" type = "password" id = "pw" value = "Password" required/>
+        <input name = "email" type = "email" id = "email" value = "E-mail contact information."/>
+        How would you like to enter your data?
+        <input type = "radio" id = "input_type" name = "input_type" value ="SQL Query" />
+        <input type = "radio" id = "input_type" name = "input_type" value ="Manual" />
+        <input type = "radio" id = "input_type" name = "input_type" value ="Reading in JSON or XML" />
+        <input type="submit" value="Create My Metric!" />
+        </form>
+    </div>
+</div>
+
+{% endblock %}
