@@ -1,9 +1,12 @@
-Django
+dj-database-url==0.4.1
+Django==1.9.7
+gunicorn==19.6.0
+psycopg2==2.6.1
+whitenoise==3.2
 matplotlib
 numpy
 scipy
 datetime
 simplejson
-psycopg2
 django-toolbelt
 mpld3
