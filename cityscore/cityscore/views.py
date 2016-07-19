@@ -400,7 +400,10 @@ def analytics_page(request, name = "Library Users"):
                             #  cmap=plt.cm.jet
                              )
             d = [v.entry_date for v in values]
-            labels = ['%s/%s/%s' % (dt.month, dt.day, dt.year) for dt in d] + [': %d' % yy for yy in y]
+            labels = ['%s/%s/%s' % (dt.month, dt.day, dt.year) for dt in d] 
+            for i, l in enumerate(labels):
+                labels[i] = ''.join([l, ': {}'.format(round(y[i],2))])
+            print >>sys.stderr, labels[0]
             tooltip = mpld3.plugins.connect(fig, mpld3.plugins.PointLabelTooltip(lines[0],labels))
             ##ax.set_title("D3 Scatter Plot", size=18);
             g = mpld3.fig_to_html(fig,template_type="simple")
