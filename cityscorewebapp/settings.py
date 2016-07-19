@@ -83,10 +83,12 @@ WSGI_APPLICATION = 'cityscorewebapp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
+##HEROKU
 import dj_database_url
 DATABASES = {
     "default": dj_database_url.config()
 }
+
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -100,6 +102,7 @@ DATABASES = {
 #     #     'HOST': os.environ.get('POSTGRES_HOST'),
 #     #     'PORT': os.environ.get('POSTGRES_PORT'),
 #     # },
+## DOCKER / POSTGRESQL
 #     # 'default': {
 #     #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
 #     #     'NAME': 'postgres',
