@@ -2,7 +2,7 @@ import numpy as np
 import datetime
 import simplejson 
 import json
-import sys
+# import sys
 import csv
 import base64
 # import os
@@ -19,7 +19,6 @@ from django.contrib.auth.models import User
 from django.core import serializers
 from django import template
 from .settings import DATABASES
-from import_export import resources
 import matplotlib
 matplotlib.use('Agg')
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
@@ -324,7 +323,6 @@ def new_server_connection(request):
     return render(request, 'cityscore/upload_server.html',context)
     
 def handle_uploaded_file(this_city, file):
-    # print >>sys.stderr, file.content_type
     if file.content_type == "text/csv" or file.content_type == "application/vnd.ms-excel":
         reader = csv.reader(file)
         for row in reader:
@@ -380,6 +378,7 @@ def analytics_page(request, name = "Library Users"):
             # ax.spines["right"].set_visible(False)    
             # ax.spines["left"].set_visible(False) 
             y = [s for s in score_list]
+            # y = filter(lambda s: s is not None, score_list)
             x = [yy for yy in range(len(y))]
             # ax.plot_date(x, y, '-')
             # if m_obj.numVals > 3:
@@ -402,8 +401,10 @@ def analytics_page(request, name = "Library Users"):
             d = [v.entry_date for v in values]
             labels = ['%s/%s/%s' % (dt.month, dt.day, dt.year) for dt in d] 
             for i, l in enumerate(labels):
-                labels[i] = ''.join([l, ': {}'.format(round(y[i],2))])
-            print >>sys.stderr, labels[0]
+                if y[i] is not None: 
+                    labels[i] = ''.join([l, ': {}'.format(round(y[i],2))])
+                else:
+                    labels[i] = ''.join([l, "None"])
             tooltip = mpld3.plugins.connect(fig, mpld3.plugins.PointLabelTooltip(lines[0],labels))
             ##ax.set_title("D3 Scatter Plot", size=18);
             g = mpld3.fig_to_html(fig,template_type="simple")
