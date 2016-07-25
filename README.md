@@ -49,7 +49,13 @@ If you wish to share the webapp and make it run like a website, you will need to
 buy and configure a web server, which is outside the scope of this introduction.
 
 ## Usage
-TODO: Write usage instructions
+CityScore will allow you to create a log-in. This log-in is simply a layer of 
+security and a way for us at City of Boston to know who uses the CityScore toolkit
+so we can keep a potentially notify you of updates to the project. Once you are logged in,
+the webapp has easy-to-access features and demonstrations of how to use its many features.
+You do NOT need to log out of the application, simply close the tab in which it resides and the 
+application will automatically log you out. Attempting to manually log out will cause the application
+to lose any cookies it has collected while you were logged in as it is native to your machine.
 
 ## Contributing
 1. Fork it!
@@ -57,6 +63,8 @@ TODO: Write usage instructions
 3. Commit your changes: `git commit -am 'Add some feature'`
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :D
+Feel free to send us feature requests or your ideas for improving the toolkit at
+cityscore@boston.gov
 
 ## Credits
 Special thanks to Mayor Martin J. Walsh and his efforts to use data to create a 

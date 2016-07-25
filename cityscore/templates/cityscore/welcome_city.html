@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lora|Montserrat" rel="stylesheet">
+    <link rel="icon" 
+      type="image/gif" 
+      href="https://www.costtree.net/sites/default/files/bostonseal.gif">
+    <title> CityScore </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style type="text/css">
+      .jumbotron-bg {
+            background:  #F2F2F2;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            background-size: cover;
+            -o-background-size: cover;
+            height:100%;
+        }
+
+      body {
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+      
+      /* Everything but the jumbotron gets side spacing for mobile first views */
+      .header,
+      .marketing,
+      .footer {
+        padding-right: 15px;
+        padding-left: 15px;
+      }
+      
+      /* Custom page header */
+      .header {
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e5e5e5;
+      }
+      /* Make the masthead heading the same height as the navigation */
+      .header h3 {
+        margin-top: 0;
+        margin-bottom: 0;
+        line-height: 40px;
+      }
+      
+      /* Custom page footer */
+      .footer {
+        padding-top: 19px;
+        color: #777;
+        border-top: 1px solid #e5e5e5;
+      }
+      
+      
+      .jumbotron h1{
+        color: #FB4D42;
+        text-shadow: 0.1px 0.1px #000000;
+      }
+      
+      .lead{
+        color: #091F2F;
+        text-shadow: 0.1px 0.1px #091F2F;
+      }
+      /* Customize container */
+      @media (min-width: 768px) {
+        .container {
+          max-width: 730px;
+        }
+      }
+      .container-narrow > hr {
+        margin: 30px 0;
+      }
+      
+      .jumbotron {
+        text-align: center;
+        border-bottom: 1px solid #e5e5e5;
+        background: none;
+      }
+      
+      .jumbotron .btn {
+        padding: 14px 24px;
+        font-size: 21px;
+      }
+      
+      /* Supporting marketing content */
+      .marketing {
+        margin: 40px 0;
+      }
+      .marketing p + h4 {
+        margin-top: 28px;
+      }
+      
+      /* Responsive: Portrait tablets and up */
+      @media screen and (min-width: 768px) {
+        /* Remove the padding we set earlier */
+        .header,
+        .marketing,
+        .footer {
+          padding-right: 0;
+          padding-left: 0;
+        }
+        /* Space out the masthead */
+        .header {
+          margin-bottom: 30px;
+        }
+        /* Remove the bottom border on the jumbotron for visual effect */
+        .jumbotron {
+          border-bottom: 0;
+        }
+      
+        #welcome-tag{
+          font-family: 'Montserrat' sans-serif;
+          color:  #288BE4;
+        }
+      
+        #interested{
+          background-color: #288BE4;
+        }
+        #create{
+          background-color: #45789C;
+          font-family: 'Montserrat' sans-serif;
+        }
+        
+        #top{
+          font-family: 'Montserrat' sans-serif;
+          color:  #FB4D42;
+        }
+      }
+    </style>
+    </head>
+  <body>
+
+    <div class="container">
+      <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" class="active"><a href="/login/">User Login</a></li>
+            <li role="presentation"><a href="https://pilot.boston.gov/departments/innovation-and-technology" method = "post">Contact Us!</a></li>
+          </ul>
+        </nav>
+        <h4 class="text-muted" id = "top">THE CITY OF BOSTON</h3>
+      </div>
+      <div class = "jumbotron-bg">
+      <div class="jumbotron">
+        <h2 id = "welcome-tag">THIS IS CITYSCORE</h1>
+        <p class="lead">We provide a tool for you to measure your performance on key indicators.
+          It's really easy: just enter a few measurements from your normal operations. Set a target or goal.
+          We'll calculate your "score" and show you how you're doing over time!</p>
+          <a href = "/register/" role = "button" class = "btn btn-default">CREATE YOUR CITYSCORE!</a>
+</p>
+      </div>
+    </div>
+      <div class="row marketing">
+        <div class="col-lg-6">
+          <h4>The City of Boston's Original CityScore</h4>
+          <p>First introduced in a coordinated effort by City of
+            Boston Chief of Staff Dan Koh and the Department of Innovation and Technology....</p>
+        </div>
+
+        <div class="col-lg-6">
+          <h4>Performance Management</h4>
+          <p>It's, like, really important.</p>
+        </div>
+      </div>
+
+      <footer class="footer">
+    <div class="row">
+        <div class="col-md-6" id = "borderless" align = 'left'><p>© 2016 City of Boston, Inc. <br><a href = "https://pilot.boston.gov/departments/innovation-and-technology">See more</a> about Boston's Dept of Innovation and Technology.</p></div>
+    <div class='col-md-6' id='borderless' align='right'><p><img src="http://www.masshome.com/images/seals/bostonseal.gif" width='50' height='50' /></p><font size = "-2"><em>Mayor Martin J. Walsh</em></font></div>
+    </div>
+    <div class = 'row'>
+      <div class = 'col-md-4' id = 'borderless' align = 'left'></div>
+    </div>
+    </footer>
+
+    </div>
+
+
+</body></html>

@@ -5,6 +5,7 @@ import json
 # import sys
 import csv
 import base64
+from io import TextIOWrapper, StringIO
 # import os
 from django.http import HttpResponseRedirect, HttpResponse, Http404, HttpResponseBadRequest
 from django.template import loader, Context, Template
@@ -155,7 +156,13 @@ def get_value(request):
             else:
                 form = UploadFileForm(request.POST, request.FILES)
                 if form.is_valid():
-                    err = handle_uploaded_file(this_city, request.FILES['file'])
+                    err = handle_uploaded_file(
+                                               this_city,
+#                                               TextIOWrapper(
+                                                             request.FILES['file']
+#                                                             encoding=request.encoding
+#                                                             )
+                                               )
                     if err is None:
                         return HttpResponseRedirect('/cityscore/')
                     else:
@@ -324,7 +331,8 @@ def new_server_connection(request):
     
 def handle_uploaded_file(this_city, file):
     if file.content_type == "text/csv" or file.content_type == "application/vnd.ms-excel":
-        reader = csv.reader(file)
+        filev = StringIO(file.read().decode())
+        reader = csv.reader(filev)
         for row in reader:
             try: 
                 m_set = this_city.metric_set.filter(city = this_city.pk)
@@ -359,58 +367,61 @@ def analytics_page(request, name = "Library Users"):
         this_user=request.user
         this_city = this_user.city
         if request.method == "GET":
-            m = name.decode('utf8')
+#            m = name.decode('utf8')
+            m = name
             m_obj = Metric.objects.filter(name = m)[0]
             score_list = m_obj.get_score_list
             values = m_obj.value_set.all()
-            # tableau20 = [(31, 119, 180), (174, 199, 232), (255, 127, 14), (255, 187, 120),    
-            #             (44, 160, 44), (152, 223, 138), (214, 39, 40), (255, 152, 150),    
-            #             (148, 103, 189), (197, 176, 213), (140, 86, 75), (196, 156, 148),    
-            #             (227, 119, 194), (247, 182, 210), (127, 127, 127), (199, 199, 199),    
-            #             (188, 189, 34), (219, 219, 141), (23, 190, 207), (158, 218, 229)]
-            # for i in range(len(tableau20)):    
-            #     r, g, b = tableau20[i]    
-            #     tableau20[i] = (r / 255., g / 255., b / 255.)   
-            # fig=Figure()
-            # ax=fig.add_subplot(111)
-            # ax.spines["top"].set_visible(False)    
-            # ax.spines["bottom"].set_visible(False)    
-            # ax.spines["right"].set_visible(False)    
-            # ax.spines["left"].set_visible(False) 
+            tableau20 = [(31, 119, 180), (174, 199, 232), (255, 127, 14), (255, 187, 120),
+                         (44, 160, 44), (152, 223, 138), (214, 39, 40), (255, 152, 150),
+                         (148, 103, 189), (197, 176, 213), (140, 86, 75), (196, 156, 148),
+                         (227, 119, 194), (247, 182, 210), (127, 127, 127), (199, 199, 199),
+                         (188, 189, 34), (219, 219, 141), (23, 190, 207), (158, 218, 229)]
+            for i in range(len(tableau20)):
+                 r, g, b = tableau20[i]
+                 tableau20[i] = (r / 255., g / 255., b / 255.)
+            fig=Figure()
+            ax=fig.add_subplot(111)
+            ax.spines["top"].set_visible(False)
+            ax.spines["bottom"].set_visible(False)
+            ax.spines["right"].set_visible(False)
+            ax.spines["left"].set_visible(False)
             y = [s for s in score_list]
             # y = filter(lambda s: s is not None, score_list)
-            x = [yy for yy in range(len(y))]
-            # ax.plot_date(x, y, '-')
-            # if m_obj.numVals > 3:
-            #     mins = sorted(i for i in score_list if i > 0)[0:2]
-            # ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d'))
-            # fig.autofmt_xdate()
-            # canvas=FigureCanvas(fig)
-            # response=HttpResponse(content_type='image/png')
-            # canvas.print_png(response)
-            fig, ax= plt.subplots()
-            ax.grid(color='white', linestyle='solid')
-            lines = ax.plot(x,
-                             y,
-                             marker = 'o'
-                            #  c=y,
-                            #  s = 1000*y,
-                            #  alpha=0.3,
-                            #  cmap=plt.cm.jet
-                             )
-            d = [v.entry_date for v in values]
-            labels = ['%s/%s/%s' % (dt.month, dt.day, dt.year) for dt in d] 
-            for i, l in enumerate(labels):
-                if y[i] is not None: 
-                    labels[i] = ''.join([l, ': {}'.format(round(y[i],2))])
-                else:
-                    labels[i] = ''.join([l, "None"])
-            tooltip = mpld3.plugins.connect(fig, mpld3.plugins.PointLabelTooltip(lines[0],labels))
-            ##ax.set_title("D3 Scatter Plot", size=18);
-            g = mpld3.fig_to_html(fig,template_type="simple")
-            return HttpResponse(g)
-            ##json01 = json.dumps(mpld3.fig_to_dict(fig))
-            ##return json01
+#            x = [yy for yy in range(len(y))]
+            x = [v.entry_date for v in values]
+            ax.plot_date(x, y, '-')
+#            if m_obj.numVals > 3:
+#                mins = sorted(i for i in score_list if i > 0)[0:2]
+            ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d'))
+            fig.autofmt_xdate()
+            canvas=FigureCanvas(fig)
+            response=HttpResponse(content_type='image/png')
+            canvas.print_png(response)
+            return response
+#            fig, ax= plt.subplots()
+#            ax.grid(color='white', linestyle='solid')
+#            lines = ax.plot(x,
+#                             y,
+#                             marker = 'o'
+#                            #  c=y,
+#                            #  s = 1000*y,
+#                            #  alpha=0.3,
+#                            #  cmap=plt.cm.jet
+#                             )
+#            d = [v.entry_date for v in values]
+#            labels = ['%s/%s/%s' % (dt.month, dt.day, dt.year) for dt in d] 
+#            for i, l in enumerate(labels):
+#                if y[i] is not None: 
+#                    labels[i] = ''.join([l, ': {}'.format(round(y[i],2))])
+#                else:
+#                    labels[i] = ''.join([l, "None"])
+#            tooltip = mpld3.plugins.connect(fig, mpld3.plugins.PointLabelTooltip(lines[0],labels))
+#            ##ax.set_title("D3 Scatter Plot", size=18);
+#            g = mpld3.fig_to_html(fig,template_type="simple")
+#            return HttpResponse(g)
+#            ##json01 = json.dumps(mpld3.fig_to_dict(fig))
+#            ##return json01
 
 def summarise_analysis(request, name = "Library Users"):
     internal = analytics_page(request, name)
