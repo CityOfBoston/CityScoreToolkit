@@ -31,75 +31,102 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
 
-#WELCOME SCREEN (STATIC)
+
+#WELCOME SCREEN (STATIC SPLASH PAGE SERVED BY BASIC HTML5/CSS3)
 def welcome_city(request):
     return render(request, 'cityscore/welcome_city.html',{})
 
 ##SCREEN FOR CREATING AN ACCOUNT
 def register(request):
+    # if a user is attempting to submit new acct info
     if request.method == 'POST':
+        #get the information they have entered about themselves and their city
         uf = UserCreationForm(request.POST, prefix='user')
         cf = CityForm(request.POST, prefix='city')
+        #check that the information is valid
         if uf.is_valid() * cf.is_valid():
+            #save the new information to the db
             user = uf.save()
             city = cf.save(commit=False)
             city.user = user
             city.save()
+            #direct the user to the login page
             response = HttpResponseRedirect('/login/')
             response.user = user
             return response
         else:
+            #if they entered invalid credentials, reload the page.
             return render(request, 'cityscore/register.html', {'userform':uf, 'cityform':cf, 'error': " :( "})
     else:
+        #if the user is trying to open the page, give them a blank form
         uf = UserCreationForm(prefix='user')
         cf = CityForm(prefix='city')
+    #open the page
     return render(request, 'cityscore/register.html', {'userform':uf, 'cityform':cf})
 
-##SCREEN FOR A CITY TO LOG INTO CITY SCORE        
+
+##SCREEN FOR A CITY TO LOG INTO CITY SCORE
 def login_pls(request):
+    #load the HTML
     template = loader.get_template('cityscore/login_pls.html')
+    #get the login information that the user input and ensure it is correct
     username = request.POST.get('username')
     password = request.POST.get('password')
     user = authenticate(username=username, password=password)
+    #if the user entered information, process it
     if user is not None:
+        #if the user has been using cityscore, go to the infopage
         if user.is_active:
             login(request, user)
             return redirect('legend')
+        #if the user has not been around for a while, reload
         else:
             return  render(request, 'cityscore/login_pls.html', {
-            'error_message': "disabled_account"
-            })
-    elif username is None or password is None:
-        return render(request, 'cityscore/login_pls.html', {
-            })
-    else:
-        return  render(request, 'cityscore/login_pls.html', {
-            'error_message': '',
-## something is wrong
-            'bad_details': 5
-            })
+                           'error_message': "disabled_account"
+                           })
+#if the user has not entered one of the values, reload
+elif username is None or password is None:
+    return render(request, 'cityscore/login_pls.html', {
+                  })
+                  #otherwise, reload with an error message
+                  else:
+                      return  render(request, 'cityscore/login_pls.html', {
+                                     'error_message': '',
+                                     ## something is wrong
+                                     'bad_details': 5
+                                     })
 
-#CENTRAL SCREEN INCLUDING ALL SCORES AND LINKS TO EDIT ANY VALUES OR ANALYTICS TOOLS
+##CENTRAL SCREEN INCLUDING ALL SCORES AND LINKS TO EDIT ANY VALUES OR ANALYTICS TOOLS
 #WITHIN THE CITYSCORE FRAMEWORK
-@login_required         
+@login_required
 def today_view(request):
+    #a user must be logged in to access this
     if request.user.is_authenticated():
+        #load the html
         template = loader.get_template('cityscore/today_view.html')
+        #get the user on this page and the city they are from
         this_user = request.user
         this_city = City.objects.get(user = this_user)
+        #set the name of the city for the title of the page
         this_name = this_city.cityname.upper()
+        #extract the city's basic id
         c_id = this_city.pk
+        #get all metrics in the city
         c_metrics = Metric.objects.filter(city_id = c_id).order_by('name')
+        #calculate cityscore values, percentiles, and last entered date
         c_day = this_city.calculate_cityscore_day
         c_week = this_city.calculate_cityscore_week
         c_month = this_city.calculate_cityscore_month
         c_quarter = this_city.calculate_cityscore_quarter
         c_ptile = this_city.calculate_percentile
         c_led = this_city.last_entered_date
+        #instantiate a downloadable button so the user can recoup entered data
         download_form = DownloadForm
         download_val_form = DownloadForm
+        #feed this information to the webpage using a dictionary which can be
+        #called upon in the html by the name in quotes
         context = {
-                "city": this_city,
+            "city": this_city,
                 "name": this_name,
                 "day": c_day,
                 "week": c_week,
@@ -112,9 +139,11 @@ def today_view(request):
                 "dl_form": download_form,
                 "dl_val_form":download_val_form,
                 "len": len(c_metrics)
-                }
+            }
+        #open the page with the specification
         return render(request, 'cityscore/today_view.html', context)
     else:
+        #if the user hasn't logged in, take them back to the login screen
         HttpResponseRedirect('/login/')
 
 def get_value(request):
@@ -187,72 +216,103 @@ def get_value(request):
     else:
         return HttpResponseRedirect('/login/')
 
+            return HttpResponseRedirect('/login/')
+
+## PAGE FOR A USER TO CREATE A NEW METRIC
 def get_metric(request):
     if request.user.is_authenticated():
         this_user=request.user
         this_city = this_user.city
         # if this is a POST request we need to process the form data
         if request.method == 'POST':
-            # create a form instance and populate it with data from the request:
-            form = MetricForm(request.POST)
-            # check whether it's valid:
-            if form.is_valid():
-                data = form.cleaned_data
-                newMetric = Metric(
-                                name = data['name'],
-                                definition = data['definition'],
-                                direction = data['direction'],
-                                historic = data['historic'],
-                                target = data['target'] if data['target'] else 0,
-                                city = this_city
-                                )
-                newMetric.save()
-                return HttpResponseRedirect('/entry/')
+            if 'upload_submit' in request.POST:
+                #if the user uploaded a file rather than manually entered the data
+                form = UploadMetricForm(request.POST, request.FILES)
+                if form.is_valid():
+                    #check for validity and then pass the file
+                    err = handle_uploaded_metric_file(this_city, request.FILES['file'])
+                    if err is None:
+                        #if all is well, go to value entry
+                        return HttpResponseRedirect('/entry/')
+                    else:
+                        #if there was an error, reload the page with a notification
+                        mform = MetricForm()
+                        uform = UploadMetricForm(request.POST)
+                        return render(request, 'cityscore/get_metric_upload.html', {'mform': mform, 'uform': uform, 'derror': err})
+                else:
+                    #if there was an error, reload the page with a notification
+                    mform = MetricForm()
+                    uform = UploadMetricForm(request.POST)
+                    return render(request, 'cityscore/get_metric_upload.html', {'mform': mform, 'uform': form, 'uerror': 'error'})
             else:
-                return render(request, 'cityscore/get_metric.html', {'form': form, 'error': 'error'})
-        # if a GET (or any other method) we'll create a blank form
+                # create a form instance and populate it with data from the request:
+                form = MetricForm(request.POST)
+                    # check whether it's valid:
+                    if form.is_valid():
+                        data = form.cleaned_data
+                        #add new metric based on entry and save it
+                        newMetric = Metric(
+                                           name = data['name'],
+                                           definition = data['definition'],
+                                           direction = data['direction'],
+                                           historic = data['historic'],
+                                           target = data['target'] if data['target'] else 0,
+                                           city = this_city
+                                           )
+                        newMetric.save()
+                        return HttpResponseRedirect('/entry/')
+                    else:
+                        mform = MetricForm(initial = {'target': 1})
+                            uform = UploadMetricForm()
+                                return render(request, 'cityscore/get_metric_upload.html', {'mform': mform, 'uform': uform, 'error': 'error'})
+                            # if a GET (or any other method) we'll create a blank form
         else:
-            form = MetricForm(initial = {'target': 1})
-        return render(request, 'cityscore/get_metric.html', {'form':form} )
+            #open a blank page
+            mform = MetricForm(initial = {'target': 1})
+            uform = UploadMetricForm()
+            return render(request, 'cityscore/get_metric_upload.html', {'mform':mform, 'uform':uform} )
     else:
         return HttpResponseRedirect('/login/')
-    
+
+            return HttpResponseRedirect('/login/')
+
+#EXCEEDING AND FOLLOWUP PAGE
 def attn(request):
     if request.user.is_authenticated():
         this_user = request.user
         this_city = City.objects.get(user = this_user)
         this_name = this_city.cityname.upper()
+        #call the exceeding and follow-up characteristics of the city object
+        #corresponding to the user who is logged in and feed it to the HTML
         c_id = this_city.pk
         c_exc = this_city.get_exceeding
         c_follow = this_city.get_follow_up
         context = {
-                "city": this_city,
+            "city": this_city,
                 "name": this_name,
                 "exceeding": c_exc,
                 "followup": c_follow
-                }
+            }
         return render(request, 'cityscore/exceeding.html',context)
     else:
         return HttpResponseRedirect('/login/')
 
+#info page, just screens site for login information.
 def legend(request):
     if request.user.is_authenticated():
         this_user = request.user
         this_city = City.objects.get(user = this_user)
         this_name = this_city.cityname.upper()
         c_id = this_city.pk
-        c_exc = this_city.get_exceeding
-        c_follow = this_city.get_follow_up
         context = {
-                "city": this_city,
-                "name": this_name,
-                "exceeding": c_exc,
-                "followup": c_follow
-                }
+            "city": this_city,
+                "name": this_name
+            }
         return render(request, 'cityscore/legend.html',context)
     else:
         return HttpResponseRedirect('/login/')
-        
+
+#format a csv file with the cityscore screen
 def get_csv_data_cityscore(which_city):
     data = []
     these_metrics = which_city.metric_set.filter(city = which_city.pk)
@@ -274,6 +334,7 @@ def get_csv_data_cityscore(which_city):
     data.append(', '.join(['','Citywide Data', str(cd), str(cw), str(cm), str(cq), str(cp)]))
     return '\n'.join(data)
 
+#handle a request to download the cityscore screen
 def download_cscore_data(request):
     if request.user.is_authenticated():
         this_user=request.user
@@ -284,13 +345,14 @@ def download_cscore_data(request):
     except AssertionError:
         error = 'Your request has some problems.'
         metrics = error
-
+    
     attachment = 'metrics_data.csv'
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment;filename="{}"'.format(attachment)
     response.write(metrics)
     return response
 
+#create a csv from all the entered values in a city's usage history
 def get_csv_data_values(which_city):
     data = []
     these_metrics = which_city.metric_set.filter(city = which_city.pk)
@@ -303,7 +365,8 @@ def get_csv_data_values(which_city):
             e_date = v.entry_date
             data.append(', '.join([name, str(value), str(e_date)]))
     return '\n'.join(data)
-   
+
+#handle a request to download a csv of all values
 def download_vals_data(request):
     if request.user.is_authenticated():
         this_user=request.user
@@ -314,7 +377,7 @@ def download_vals_data(request):
     except AssertionError:
         error = 'Your request has some problems.'
         value = error
-
+    
     attachment = 'value_data.csv'
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment;filename="{}"'.format(attachment)
@@ -328,11 +391,16 @@ def new_server_connection(request):
         dbform = SQLForm(initial = {'engine': 'django-pyodbc'})
         context = {'dbform':dbform, 'setting_db': DATABASES}
     return render(request, 'cityscore/upload_server.html',context)
-    
+
+#SYNC DATABASE WITH DATA FROM AN UPLOADED FILE
 def handle_uploaded_file(this_city, file):
+    #screen for the file type so we call the correct input reader
     if file.content_type == "text/csv" or file.content_type == "application/vnd.ms-excel":
+       #the second data type is specific to Microsoft, where it is a saved CSV
         filev = StringIO(file.read().decode())
         reader = csv.reader(filev)
+        #extract the data row-by-row. if something is wrong, tell the user where
+        #the error occurred.
         for row in reader:
             try: 
                 m_set = this_city.metric_set.filter(city = this_city.pk)
@@ -347,7 +415,9 @@ def handle_uploaded_file(this_city, file):
             else:
                 err = None
         return err
+    #otherwise, if the file is a JSON...
     elif file.content_type == "text/json":
+        #use django's inbuilt data serializer to extract information from the file
         json_file = simplejson.load(file)
         obj_generator = serializers.json.Deserializer(json_file)
         m_set = this_city.metric_set.filter(city = this_city.pk)
@@ -360,14 +430,20 @@ def handle_uploaded_file(this_city, file):
                         )
             obj.save()
     else:
+        #currently unable to handle non-csv, non-json files.
         return 'That file type is invalid!'
-        
+
+##SCREEN FOR UPLOADING A SERVER
+def server(request):
+    return render(request, 'cityscore/upload_server.html',{})
+
+#generate a graph of the values for a given metric. metric name is passed as a
+#parameter to this function via URL
 def analytics_page(request, name = "Library Users"):
     if request.user.is_authenticated():
         this_user=request.user
         this_city = this_user.city
         if request.method == "GET":
-#            m = name.decode('utf8')
             m = name
             m_obj = Metric.objects.filter(name = m)[0]
             score_list = m_obj.get_score_list
@@ -387,42 +463,63 @@ def analytics_page(request, name = "Library Users"):
             ax.spines["right"].set_visible(False)
             ax.spines["left"].set_visible(False)
             y = [s for s in score_list]
-            # y = filter(lambda s: s is not None, score_list)
-#            x = [yy for yy in range(len(y))]
             x = [v.entry_date for v in values]
             ax.plot_date(x, y, '-')
-#            if m_obj.numVals > 3:
-#                mins = sorted(i for i in score_list if i > 0)[0:2]
             ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d'))
             fig.autofmt_xdate()
             canvas=FigureCanvas(fig)
             response=HttpResponse(content_type='image/png')
             canvas.print_png(response)
             return response
-#            fig, ax= plt.subplots()
-#            ax.grid(color='white', linestyle='solid')
-#            lines = ax.plot(x,
-#                             y,
-#                             marker = 'o'
-#                            #  c=y,
-#                            #  s = 1000*y,
-#                            #  alpha=0.3,
-#                            #  cmap=plt.cm.jet
-#                             )
-#            d = [v.entry_date for v in values]
-#            labels = ['%s/%s/%s' % (dt.month, dt.day, dt.year) for dt in d] 
-#            for i, l in enumerate(labels):
-#                if y[i] is not None: 
-#                    labels[i] = ''.join([l, ': {}'.format(round(y[i],2))])
-#                else:
-#                    labels[i] = ''.join([l, "None"])
-#            tooltip = mpld3.plugins.connect(fig, mpld3.plugins.PointLabelTooltip(lines[0],labels))
-#            ##ax.set_title("D3 Scatter Plot", size=18);
-#            g = mpld3.fig_to_html(fig,template_type="simple")
-#            return HttpResponse(g)
-#            ##json01 = json.dumps(mpld3.fig_to_dict(fig))
-#            ##return json01
 
+##DUMMY FUNCTION FOR THE ANALYTICS PAGE HTML
 def summarise_analysis(request, name = "Library Users"):
     internal = analytics_page(request, name)
     return render(request, 'cityscore/analytics.html', {'name': name, 'graph': internal})
+
+
+#SYNC DATABASE WITH DATA FROM AN UPLOADED METRIC FILE
+def handle_uploaded_metric_file(this_city, file):
+    #screen for the file type so we call the correct input reader
+    if file.content_type == "text/csv" or file.content_type == "application/vnd.ms-excel":
+        #the second data type is specific to Microsoft, where it is a saved CSV
+        filev = StringIO(file.read().decode())
+        reader = csv.reader(filev)
+        #extract the data row-by-row. if something is wrong, tell the user where
+        #the error occurred.
+        for row in reader:
+            try:
+                _,created = Metric.objects.get_or_create(
+                                                         name = row[0],
+                                                         definition = row[1],
+                                                         direction = row[2],
+                                                         historic = row[3],
+                                                         target = row[4],
+                                                         trend = row[5],
+                                                         city = this_city
+                                                         )
+            except:
+                err = "There was an error processing this at the metric named " + row[0]
+            else:
+                err = None
+return err
+    #otherwise, if the file is a JSON...
+    elif file.content_type == "text/json":
+        #use django's inbuilt data serializer to extract information from the file
+        json_file = simplejson.load(file)
+        obj_generator = serializers.json.Deserializer(json_file)
+        m_set = this_city.metric_set.filter(city = this_city.pk)
+        for obj in obj_generator:
+            record = Metric(
+                            name = obj.name,
+                            definition = obj.definition,
+                            direction = obj.direction,
+                            historic = obj.historic,
+                            target = obj.target,
+                            trend = obj.trend,
+                            city = this_city
+                            )
+            obj.save()
+    else:
+        #currently unable to handle non-csv, non-json files.
+        return 'That file type is invalid!'

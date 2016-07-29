@@ -19,6 +19,7 @@
   <!-- https://silviomoreto.github.io/bootstrap-select/ -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+  <title> CityScore </title>
   <link rel="icon" 
       type="image/gif" 
       href="https://www.costtree.net/sites/default/files/bostonseal.gif">
@@ -206,6 +207,10 @@
                 </div>
             </div>
             {% endfor %}
+            <hr style = "padding-top: -25px; padding-bottom: 0px;"/>
+              <div class="alert alert-info" style = "padding-top: -25px;" role="alert" id="response" align = "center">
+                <a href="/metric/" class="alert-link">Enter your data as a formatted CSV or JSON.</a>
+              </div> 
             <ul class="nav nav-pills" align = "center">
             <li role="presentation" align = "center" for = "upload_submit"><a><input type="submit" value="Submit" method = "POST" name = "upload_submit" class = "lisubmit"/> </a></li>
             <li role="presentation"  style = "padding-top:2px;"><a href = "/upload/server/">Instructions for SQL</a></li>
