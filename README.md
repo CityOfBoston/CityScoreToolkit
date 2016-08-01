@@ -85,7 +85,7 @@ Copy and paste the address (here, http://0.0.0.0:8000/) into the browser of your
 ## Usage
 CityScore will allow you to create a log-in. This log-in is simply a layer of
 security and a way for us at City of Boston to know who uses the CityScore toolkit
-so we can keep a potentially notify you of updates to the project. Once you are logged in,
+so we can potentially notify you of updates to the project. Once you are logged in,
 the webapp has easy-to-access features and demonstrations of how to use its many features.
 You do NOT need to log out of the application, simply close the tab in which it resides and the
 application will automatically log you out. Attempting to manually log out will cause the application
