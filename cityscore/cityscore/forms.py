@@ -47,6 +47,10 @@ class UploadFileForm(Form):
     metric =  django.forms.ModelMultipleChoiceField(
                                                 queryset=Metric.objects.all()
                                                              )
+                                                             
+class UploadMetricForm(Form):
+    file = django.forms.FileField()
+
     # def __init__(self, *args, **kwargs):
     #     if args is not None:
     #         mycity = args[0]

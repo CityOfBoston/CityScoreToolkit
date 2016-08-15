@@ -11,7 +11,7 @@ from django.http import HttpResponseRedirect, HttpResponse, Http404, HttpRespons
 from django.template import loader, Context, Template
 from django.shortcuts import render, get_object_or_404, render_to_response, redirect
 from .models import Value, Metric, City
-from .forms import ValueForm, MetricForm, CityForm, DownloadForm, SQLForm, UploadFileForm
+from .forms import ValueForm, MetricForm, CityForm, DownloadForm, SQLForm, UploadFileForm, UploadMetricForm
 from django.contrib.auth.forms import UserCreationForm
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate, login
@@ -235,12 +235,12 @@ def get_metric(request):
                         #if there was an error, reload the page with a notification
                         mform = MetricForm()
                         uform = UploadMetricForm(request.POST)
-                        return render(request, 'cityscore/get_metric_upload.html', {'mform': mform, 'uform': uform, 'derror': err})
+                        return render(request, 'cityscore/get_metric_upload.html', {'mform': mform, 'uform': uform, 'error': err})
                 else:
                     #if there was an error, reload the page with a notification
                     mform = MetricForm()
                     uform = UploadMetricForm(request.POST)
-                    return render(request, 'cityscore/get_metric_upload.html', {'mform': mform, 'uform': form, 'uerror': 'error'})
+                    return render(request, 'cityscore/get_metric_upload.html', {'mform': mform, 'uform': uform, 'error': 'error'})
             else:
                 # create a form instance and populate it with data from the request:
                 form = MetricForm(request.POST)
