@@ -122,7 +122,7 @@
     <div class="page-header">
       <div class="row">
       <div class="col-md-2" id = "borderless"> <img src = "https://upload.wikimedia.org/wikipedia/commons/a/ab/Logo_TV_2015.png" width = "70" height = "70"/></div>
-      <div class="col-md-8" id = "borderless"><h1><center>AREAS REQUIRING ATTENTION IN <div id = "special">{{name}}</div></center></h1></div>
+      <div class="col-md-8" id = "borderless"><h1><center>WEEKLY CITYSCORE RECAP IN <div id = "special">{{name}}</div></center></h1></div>
       <div class="cold-md-2" id = "nav">
       {% if dl_form %}
       <form action="/download/"  method="POST">
@@ -145,7 +145,7 @@
       
       <div class = "row">
         <center>
-      <p class="lead">To view detailed analysis, click on the metric you're interested in. See the <a href = "/legend/">legend</a> for details.</p>
+      <p class="lead">This dashboard provides an overview of the highest and lowest scoring KPIs over the previous 7 days. You will see metrics sorted by weekly scores, in addition to monthly and quarterly scores and the percentile of the weekly score. In Boston, this dashboard helps Mayor Walsh prioritize which cabinet chiefs he may want to have congratulatory or follow-up conversations with. To view detailed analysis, click on the metric you're interested in. See the <a href = "/legend/">legend</a> for details.</p>
       </center>
       </div>
     </div>
@@ -153,7 +153,7 @@
       <table class="table table-hover" id = "tbl">
         <thead class="thead-inverse" id = "tblhead" style="align: center; color: #288BE4;">
           <tr>
-            <th>BEST PERFORMING INDICATORS</th>
+            <th>EXCEEDING INDICATORS</th>
             <th>WEEKLY</th>
             <th>MONTHLY</th>
             <th>QUARTERLY</th>
@@ -196,7 +196,7 @@
         <tr></tr>
         <thead class="thead-inverse" id = "tblhead" style="align: center; color: #FB4D42;">
           <tr>
-            <th>INDICATORS REQUIRING A FOLLOW-UP</th>
+            <th>INDICATORS IN NEED OF FOLLOW-UP</th>
             <th>WEEKLY</th>
             <th>MONTHLY</th>
             <th>QUARTERLY</th>

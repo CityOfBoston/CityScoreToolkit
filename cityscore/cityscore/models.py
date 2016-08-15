@@ -17,7 +17,7 @@ import math
 #PROXY SECONDARY MODEL FOR THE USER IN CASE THE CITY WANTS TO CREATE CITYWIDE,
 #CROSS-METRIC ANALYTICAL TOOLS
 class City(models.Model):
-    cityname = models.CharField("City name",
+    cityname = models.CharField("City or organization name",
                                 max_length = 200
                                 )
     user = models.OneToOneField(User, on_delete = models.CASCADE, primary_key = True, verbose_name = "user")
@@ -203,32 +203,15 @@ class Metric(models.Model):
                                 max_length=200
                                 )
     direction = models.BooleanField(
-                                    "Check this box if an improvement in the \
-                                    metric is indicated by it going up (e.g., \
-                                    smiles). Leave it unchecked in the \
-                                    opposite case (e.g., frowns).",
+                                    "Check this box if an improvement in the metric is indicated by its value going up (e.g., pothole repair on-time %). Leave it unchecked in the opposite case (e.g., ambulance response time).",
                                     default = 1
                                     )
     historic = models.BooleanField(
-                                    "Check the box if you lack a target \
-                                    for this metric. If checked, we will \
-                                    not be able to generate truly accurate \
-                                    scores for this metric without at least a \
-                                    quarter of data, but after at least 90 \
-                                    data values are entered we can \
-                                    automatically calculate a moving target \
-                                    that is responsive to your city's \
-                                    historic performance.", 
+                                    "Check the box if this metric does not have a target. If checked, please note a minimum of 90 days of data (and ideally 365 days of data) is needed to generate an accurate score. Once there is 90 days of data in the system, the tool will automatically calculate a moving target based on this metric’s historical performance.", 
                                     default = 0
                                     )
     target = models.FloatField(
-                                "What is the target value? If this metric \
-                                is historic (i.e., the above is checked), give \
-                                an estimate for an average value you expect \
-                                for this metric or a pre-existing historical \
-                                average, and we will pick up calculations \
-                                once we have enough data. \
-                                (This can be changed later!)"
+                                "What is the target value?"
                                 )
     city = models.ForeignKey(
         City,
@@ -236,10 +219,7 @@ class Metric(models.Model):
         verbose_name = "city"
     )
     trend = models.BooleanField(
-                                "Check this box if this metric is measured \
-                                on a long-term basis (ex. homicides). This \
-                                means that there may be days where the value \
-                                is zero, for which the score is not relevant.", 
+                                "Check this box if this metric may not have a performance value every day (e.g., homicides). If the daily value is zero, no score will be generated for that day.", 
                                 default = 0
                                 )
     scoreList = []

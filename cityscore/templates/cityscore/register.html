@@ -1,17 +1,19 @@
-<head>
+<html>
+  <head>
+    <meta name="generator"
+    content="HTML Tidy for HTML5 (experimental) for Windows https://github.com/w3c/tidy-html5/tree/c63cc39" />
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
     <!-- Latest compiled and minified JavaScript -->
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Montserrat&effect=wallpaper" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Lora" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.0.0.min.js" integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
-    <title> CityScore </title>
-    <link rel="icon" 
-      type="image/gif" 
-      href="https://www.costtree.net/sites/default/files/bostonseal.gif">
-<style type="text/css" media = "screen">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&amp;effect=wallpaper" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Lora" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.0.0.min.js" integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0="
+    crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css" />
+    <title>CityScore</title>
+    <link rel="icon" type="image/gif" href="https://www.costtree.net/sites/default/files/bostonseal.gif" />
+    <style type="text/css" media="screen">
     .jumbotron {
       text-align: center;
       border-bottom: 1px solid #e5e5e5;
@@ -43,14 +45,14 @@
       color: #F2F2F2;
     }
 
-    [class*="col-"] {
+    [class*=&quot;col-&quot;] {
       padding-top: 15px;
       padding-bottom: 15px;
       /*background-color: #eee;
       background-color: rgba(86,61,124,.15);*/
       border: 1px solid #ddd;
       border: 1px solid rgba(86,61,124,.2);
-      font-family: 'Lora', serif;
+      font-family: &#39;Lora&#39;, serif;
     }    
 
     #borderless{
@@ -63,12 +65,12 @@
     }
     
     h1, h2, h3 {
-      font-family: 'Montserrat', sans-serif;
+      font-family: &#39;Montserrat&#39;, sans-serif;
     }
     
     .lead {
       font-style: italic;
-      font-family: 'Lora', italic;
+      font-family: &#39;Lora&#39;, italic;
       font-size: 100%;
       padding-bottom: 5px;
       padding-top: 5px;
@@ -79,38 +81,38 @@
     }
     
     .tblhead{
-      font-family: 'Montserrat', sans-serif;
+      font-family: &#39;Montserrat&#39;, sans-serif;
       background-color: #091F2F;
       color: #000000; 
     }
     
     td{
-     font-family: 'Lora';
+     font-family: &#39;Lora&#39;;
      /*color: #091F2F;*/
      vertical-align: middle;
      font-size:120%;
     }
     
     em{
-        font-family: 'Lora';
+        font-family: &#39;Lora&#39;;
     }
     #menubutt{
-      font-family:'Lora';
+      font-family:&#39;Lora&#39;;
       font-size: 120%;
     }
     
     #next{
-      font-family:'Montserrat';
+      font-family:&#39;Montserrat&#39;;
     }
     
     #cscore{
-      font-family:'Montserrat';
+      font-family:&#39;Montserrat&#39;;
       background-color: #FB4D42;
       color: #FFFFFF;
     }
     
     #citybutt{
-      font-family:'Montserrat';
+      font-family:&#39;Montserrat&#39;;
       font-size: 120%;    
     }
     
@@ -122,53 +124,61 @@
         color:#FB4D42;
     }
 </style>
-
-</head>
-
-<body>
-<div class="jumbotron">
-    <center><h1  class = "font-effect-wallpaper" style = "color:#FB4D42;">REGISTER FOR CITYSCORE</h1></center>
-        {% if error %}
-        <div class="alert alert-danger" role="alert" id="response" align = "center">
-          <a href="#" class="alert-link">Hm...Something's not right! Try that again.</a>
-        </div>
-        {% else %}
-        <div class="alert alert-info" role="alert" id="response" align = "center">
-          <a href="#" class="alert-link">Your password should include a special symbol and a number. Minimum 8 characters!</a>
-        </div>        
-        {% endif %}
+  </head>
+  <body>
+    <div class="jumbotron">
+    <center>
+      <h1 class="font-effect-wallpaper" style="color:#FB4D42;">SIGN UP FOR CITYSCORE</h1>
+    </center>{% if error %}
+    <div class="alert alert-danger" role="alert" id="response" align="center">
+      <a href="#" class="alert-link">Hm...Something&#39;s not right! Try that again.</a>
+    </div>{% else %}
+    <div class="alert alert-info" role="alert" id="response" align="center">
+      <a href="#" class="alert-link">Your password should be a minimum of 8 characters and include a special symbol and number.</a>
+    </div>{% endif %}
     <div class="container">
-<form method="POST" action="">
-    {% csrf_token %}
-    {% for field in userform %}
-    <div class="panel panel-default">
-        <div class="panel-body">
-          <ul class="nav nav-tabs nav-justified"><li>{{ field.label_tag }}</li> <li>{{field}}</li></ul>
-        </div>
-    </div>
-    {% endfor %}
-    {% for field in cityform %}
+      <form method="post" action="">{% csrf_token %} {% for field in userform %}
       <div class="panel panel-default">
-          <div class="panel-body">
-            <ul class="nav nav-tabs nav-justified"><li>{{ field.label_tag }}</li> <li>{{field}}</li></ul>
-          </div>
+        <div class="panel-body">
+          <ul class="nav nav-tabs nav-justified">
+            <li>{{ field.label_tag }}</li>
+            <li>{{field}}</li>
+          </ul>
+        </div>
+      </div>{% endfor %} {% for field in cityform %}
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <ul class="nav nav-tabs nav-justified">
+            <li>{{ field.label_tag }}</li>
+            <li>{{field}}</li>
+          </ul>
+        </div>
+      </div>{% endfor %} 
+      <input type="submit" value="Submit" class="btn btn-default" /></form>
+      <span>Already have an account? 
+      <a href="/login/">Sign in.</a></span>
+    </div>
+    <!-- /container --></div>
+    <footer class="footer">
+      <div class="row">
+        <div class="col-md-6" id="borderless" align='left'>
+          <p>© 2016 City of Boston, Inc.
+          <br />
+          <a href="https://pilot.boston.gov/departments/innovation-and-technology">See more</a> about Boston&#39;s Dept of
+          Innovation and Technology.</p>
+        </div>
+        <div class='col-md-6' id='borderless' align='right'>
+          <p>
+            <img src="http://www.masshome.com/images/seals/bostonseal.gif" width='50' height='50' />
+          </p>
+          <font size="-2">
+            <em>Mayor Martin J. Walsh</em>
+          </font>
+        </div>
       </div>
-    {% endfor %}
-    <input type="submit" value="Submit" class = "btn btn-default"/>
-</form>
-<span> Already have an account? <a href = "/login/">Sign in.</a></span>
-    </div>
-    <!-- /container -->
-</div>
-</body>
-<footer class="footer">
-  <div class="row">
-    <div class="col-md-6" id="borderless" align='left'>
-      <p>© 2016 City of Boston, Inc. <br><a href="https://pilot.boston.gov/departments/innovation-and-technology">See more</a> about Boston's Dept of Innovation and Technology.</p>
-    </div>
-    <div class='col-md-6' id='borderless' align='right'><p><img src="http://www.masshome.com/images/seals/bostonseal.gif" width='50' height='50' /></p><font size = "-2"><em>Mayor Martin J. Walsh</em></font></div>
-  </div>
-  <div class='row'>
-    <div class='col-md-4' id='borderless' align='left'></div>
-  </div>
-</footer>
+      <div class='row'>
+        <div class='col-md-4' id='borderless' align='left'></div>
+      </div>
+    </footer>
+  </body>
+</html>

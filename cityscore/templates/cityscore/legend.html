@@ -134,7 +134,7 @@
     <div class="page-header">
       <div class="row">
       <div class="col-md-2" id = "borderless"> <img src = "https://upload.wikimedia.org/wikipedia/commons/a/ab/Logo_TV_2015.png" width = "70" height = "70"/></div>
-      <div class="col-md-8" id = "borderless"><h1><center><div id = "special">{{name}}'S</div> CITYSCORE LEGEND</center></h1></div>
+      <div class="col-md-8" id = "borderless"><h1><center>How to Interpret CityScore</center></h1></div>
        <div class="cold-md-2" id = "nav">
       {% if dl_form %}
       <form action="/download/"  method="POST">
@@ -156,7 +156,7 @@
       </div>
 <div class="panel panel-default">
   <div class="panel-heading" align = "center">
-    <h3 class="panel-title"> <a href = "" >WHAT DO THE TABLES MEAN?</a></h3></div>
+    <h3 class="panel-title"> <a href = "" >WHAT DO THE SCORES MEAN?</a></h3></div>
   <div class="panel-body">
      <div class="row" id = "legend">
       <div class="col-md-3" id = "borderless" align = "center"><a class="list-group-item" id = "bad" role="button" >Score Less than 1</a></div>
@@ -165,10 +165,10 @@
       <div class="col-md-3" id = "borderless" align = "center"><a class="list-group-item  list-group-item-info" id = "bad_info" role="button" name = "analytics">Target Error</a></div>
     </div>
       <div class="row" id = "legend">
-      <div class="col-md-3" id = "borderless" align = "center">This indicator requires attention.</div>
-      <div class="col-md-3" id = "borderless" align = "center">This indicator is doing well.</div>
-      <div class="col-md-3" id = "borderless" align = "center">This indicator is maintaining the target value.</div>
-      <div class="col-md-3" id = "borderless" align = "center">This indicator needs more values input to accurately assess its performance.</div>
+      <div class="col-md-3" id = "borderless" align = "center">This indicator is underperforming compared to its target.</div>
+      <div class="col-md-3" id = "borderless" align = "center">This indicator is performing better than its target.</div>
+      <div class="col-md-3" id = "borderless" align = "center">This indicator is performing at exactly its target.</div>
+      <div class="col-md-3" id = "borderless" align = "center">More data is required to accurately assess this indicator’s performance. </div>
     </div>
   </div>
 </div>
@@ -183,10 +183,10 @@
       <div class="col-md-3" id = "borderless" align = "center"><a class="list-group-item" role="button">Historic?</a></div>
     </div>
       <div class="row" id = "legend">
-      <div class="col-md-3" id = "borderless" align = "center">These measure how well your organization is performing. They are all averaged together in terms of performance to get your final cityscore.</div>
-      <div class="col-md-3" id = "borderless" align = "center">Daily measurements of how your organization performs on your chosen metrics. You enter the value and the date it corresponds to, and our engine will use that to generate a cityscore.</div>
-      <div class="col-md-3" id = "borderless" align = "center">If you want to add new values from pre-existing data sources in your organization, we have infrastructure for that. If not, you can enter data manually.</div>
-      <div class="col-md-3" id = "borderless" align = "center">Measuring performance requires a target value for your metrics. If you're not sure what that target is, cityscore has inbuilt algorithms to calculate the target based on historic values. You can select this option when adding a new metric. However, this algorithm only works when you have at least 90 values, or else the score may not be accurate.</div>
+      <div class="col-md-3" id = "borderless" align = "center">These are your key performance indicators. Ideally, taken together, these measures would provide you with a good sense of the overall health of your city or organization. CityScore will score these metrics individually and then average across them to create your overall CityScore. </div>
+      <div class="col-md-3" id = "borderless" align = "center">These are the daily values for your key performance indicators. Each metric value and its corresponding date will be used to generate CityScore. You will need at least 90 days of data to get a fully representative CityScore for each time period on the dashboard (day, week, month and quarter), as those time periods are calculated on a rolling basis.</div>
+      <div class="col-md-3" id = "borderless" align = "center">If you want to add metric values from pre-existing data sources in your organization, we have infrastructure for that. If not, you can enter data manually.</div>
+      <div class="col-md-3" id = "borderless" align = "center">Measuring performance requires that you specify targets for your key performance indicators. If there is no target, CityScore will use an algorithm to calculate a target based on the target’s historic performance. You can select this option when adding a new metric. Please note, this algorithm works with a minimum of 90 values, and performs best with 365 values or more. A score will be generated with fewer than 90 values, but the result may not be accurate.</div>
     </div>
   </div>
 </div>
