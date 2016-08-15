@@ -30,7 +30,7 @@ For a more detailed set of instructions for working with Docker, you can access 
 
 
 ## Instructions for running app from source (recommended for technical users interested in app customization)
-This application was written in the Django programming framework using the Python language. It uses Twitter's Bootstrap framework for visuals (CSS and JS), and HTML5 for the organization of its pages. The package also includes a Procfile and Dockerfile in case you wish to package the file and incorporate it into a larger platform.
+This application was written in the Django programming framework using the Python language. It uses Twitter's Bootstrap framework for visuals (CSS and JS), and HTML5 for the organization of its pages. The package also includes a Procfile and Dockerfile in case you wish to package the file and incorporate it into a larger platform. For more detailed developer documentation, please refer to the [CityScore technical documentation](https://docs.google.com/document/d/1DSqCxMvQBMcE0YVHX-wk2B0iVos3TG8Fp7jSiD5JkLk/edit?ts=57b22cac).
 
 ### Dependencies
 - Python 3.5
