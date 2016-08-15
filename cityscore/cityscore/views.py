@@ -85,16 +85,15 @@ def login_pls(request):
                            'error_message': "disabled_account"
                            })
 #if the user has not entered one of the values, reload
-elif username is None or password is None:
-    return render(request, 'cityscore/login_pls.html', {
-                  })
+    elif username is None or password is None:
+        return render(request, 'cityscore/login_pls.html', {})
                   #otherwise, reload with an error message
-                  else:
-                      return  render(request, 'cityscore/login_pls.html', {
-                                     'error_message': '',
-                                     ## something is wrong
-                                     'bad_details': 5
-                                     })
+    else:
+        return render(request, 'cityscore/login_pls.html', {
+            'error_message': '',
+            ## something is wrong
+            'bad_details': 5
+        })
 
 ##CENTRAL SCREEN INCLUDING ALL SCORES AND LINKS TO EDIT ANY VALUES OR ANALYTICS TOOLS
 #WITHIN THE CITYSCORE FRAMEWORK
@@ -216,8 +215,6 @@ def get_value(request):
     else:
         return HttpResponseRedirect('/login/')
 
-            return HttpResponseRedirect('/login/')
-
 ## PAGE FOR A USER TO CREATE A NEW METRIC
 def get_metric(request):
     if request.user.is_authenticated():
@@ -247,25 +244,25 @@ def get_metric(request):
             else:
                 # create a form instance and populate it with data from the request:
                 form = MetricForm(request.POST)
-                    # check whether it's valid:
-                    if form.is_valid():
-                        data = form.cleaned_data
-                        #add new metric based on entry and save it
-                        newMetric = Metric(
-                                           name = data['name'],
-                                           definition = data['definition'],
-                                           direction = data['direction'],
-                                           historic = data['historic'],
-                                           target = data['target'] if data['target'] else 0,
-                                           city = this_city
-                                           )
-                        newMetric.save()
-                        return HttpResponseRedirect('/entry/')
-                    else:
-                        mform = MetricForm(initial = {'target': 1})
-                            uform = UploadMetricForm()
-                                return render(request, 'cityscore/get_metric_upload.html', {'mform': mform, 'uform': uform, 'error': 'error'})
-                            # if a GET (or any other method) we'll create a blank form
+                # check whether it's valid:
+                if form.is_valid():
+                    data = form.cleaned_data
+                    #add new metric based on entry and save it
+                    newMetric = Metric(
+                                       name = data['name'],
+                                       definition = data['definition'],
+                                       direction = data['direction'],
+                                       historic = data['historic'],
+                                       target = data['target'] if data['target'] else 0,
+                                       city = this_city
+                                       )
+                    newMetric.save()
+                    return HttpResponseRedirect('/entry/')
+                else:
+                    mform = MetricForm(initial = {'target': 1})
+                    uform = UploadMetricForm()
+                    return render(request, 'cityscore/get_metric_upload.html', {'mform': mform, 'uform': uform, 'error': 'error'})
+                    # if a GET (or any other method) we'll create a blank form
         else:
             #open a blank page
             mform = MetricForm(initial = {'target': 1})
@@ -273,8 +270,6 @@ def get_metric(request):
             return render(request, 'cityscore/get_metric_upload.html', {'mform':mform, 'uform':uform} )
     else:
         return HttpResponseRedirect('/login/')
-
-            return HttpResponseRedirect('/login/')
 
 #EXCEEDING AND FOLLOWUP PAGE
 def attn(request):
@@ -306,8 +301,8 @@ def legend(request):
         c_id = this_city.pk
         context = {
             "city": this_city,
-                "name": this_name
-            }
+            "name": this_name
+        }
         return render(request, 'cityscore/legend.html',context)
     else:
         return HttpResponseRedirect('/login/')
@@ -502,7 +497,7 @@ def handle_uploaded_metric_file(this_city, file):
                 err = "There was an error processing this at the metric named " + row[0]
             else:
                 err = None
-return err
+        return err
     #otherwise, if the file is a JSON...
     elif file.content_type == "text/json":
         #use django's inbuilt data serializer to extract information from the file
