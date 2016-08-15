@@ -45,7 +45,7 @@ This application was written in the Django programming framework using the Pytho
 
 #### Windows
 1. Open the command prompt on your computer (if you do not know how to do this, you can search for “command prompt” after clicking your “Start” button.
-2. Type in `cd /D C://Downloads/cityscorewebapp-master` where the last part of that statement is the path you discovered above.
+2. Type in `cd /D C:/Downloads/cityscorewebapp-master` where the last part of that statement is the path you discovered above.
 3. Now type in the following exactly as you see here: `venv\bin\activate` You will see (venv) at the beginning of the new line. 
 5. Then, type in `pip install -r requirements.txt` and wait for dependencies to install.
 6. Once this finishes, type `python manage.py makemigrations`. You will see the following text in black and bold: 0014_auto_20160720_1254.py:
