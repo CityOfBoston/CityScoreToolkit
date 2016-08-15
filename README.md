@@ -1,12 +1,16 @@
 # Boston’s CityScore Toolkit
 
 CityScore has transformed the way the City of Boston does performance management by delivering daily scores for key performance metrics to the Mayor and top city managers, allowing them to check in on the health of the City every day.
+
 This CityScore toolkit is designed to allow your organization to use its own data to create and score a set of performance metrics. Using your data, the City of Boston's open-source CityScore algorithm will compile your daily performance on these metrics into a single number that grades your performance. 
+
 Now, no matter your level of technological skill or infrastructure, the same performance tool is available to you. We’ve designed this toolkit to accepted data in three ways: 1) manual data entry; 2) uploading a .csv file; and 3) connecting directly to a SQL server. If you have a limited technical background or infrastructure, this tool can still be for you, just be sure to read the accompanying documentation thoroughly. 
+
 You can access the toolkit in two ways. The first is a fully packaged Docker container, which is essentially a complete application that can run once downloaded on your machine. The second involves running it from source, for more technically-inclined users or those who want to modify the toolkit.
 
 ## Instructions for running Docker container (out-of-the-box solution recommended for less-technical users)
 To access the fully packaged version, please follow these steps:
+
 1. Create a free account on the [Docker Hub service](https://hub.docker.com).
 2. Install the free version of Docker from [their website](https://www.docker.com/products/overview) that is compatible with your computer: either Docker for Windows / Docker for Mac or Docker Toolbox. 
 3. Access a terminal as follows: 
@@ -34,6 +38,7 @@ This application was written in the Django programming framework using the Pytho
 - virtualenv
 
 ### Installation
+
 1. Download the package from GitHub by clicking on the green button that says “clone or download” and then selecting the "Download ZIP" option. This will create a local version of the application. From there, you will be able to start this application in a few easy steps. 
 2. Once you’ve downloaded the package from GitHub, unzip the downloaded file into a directory of your choosing. That directory will become the path for the next step. Record or memorize the full path of the folder where you unzipped the package. For example, the path will likely look like: “C:/Users/username/downloads/cityscorewebapp-master”.
 3. You can change the location of the package in your filesystem as much as you desire, but we recommend not changing the package structure. Once you've found the path, follow the appropriate steps for your OS:
@@ -52,6 +57,7 @@ System check identified 1 issue (0 silenced). July 20, 2016 - 12:56:36 Django ve
 9. You can now use your local computer as a server for the CityScore web application. This means you are now able to run the application self-sufficiently and all data is exclusively on this computer. Your data IS NOT collected from this package and you can use the webapp as though it were private to the computer you currently use. If you wish to share the webapp and make it run like a website, you will need to buy and configure a web server, which is outside the scope of this introduction.
 
 #### Mac/OS
+
 1. Open the terminal application on your computer
 2. You should see a $ sign after your username in the terminal. Type in `cd /Users/username/Downloads/cityscore` where the last part of that statement is the path you discovered above.
 3. Now type in the following exactly as you see here: `source venv/bin/activate`
