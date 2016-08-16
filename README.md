@@ -73,7 +73,7 @@ This application was written in the Django programming framework using the Pytho
 1. Then, type `python manage.py makemigrations`. You will see the following text in black and bold: 
 
     ```
-    0014_auto_20160720_1254.py:
+    0014_auto_20160720_1254.py
     ```
 
 1. Now type `python manage.py migrate`. If you see a warning about URLs, you need not worry.
