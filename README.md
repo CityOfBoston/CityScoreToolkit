@@ -8,6 +8,8 @@ Now, no matter your level of technological skill or infrastructure, the same per
 
 You can access the toolkit in two ways. The first is a fully packaged Docker container, which is essentially a complete application that can run once downloaded on your machine. The second involves running it from source, for more technically-inclined users or those who want to modify the toolkit.
 
+*For more detailed developer documentation, please refer to the [CityScore technical documentation](https://docs.google.com/document/d/1DSqCxMvQBMcE0YVHX-wk2B0iVos3TG8Fp7jSiD5JkLk/edit?ts=57b22cac).*
+
 ## Instructions for running Docker container (out-of-the-box solution recommended for less-technical users)
 To access the fully packaged version, please follow these steps:
 
