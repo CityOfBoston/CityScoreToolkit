@@ -35,9 +35,8 @@ For a more detailed set of instructions for working with Docker, you can access 
 This application was written in the Django programming framework using the Python language. It uses Twitter's Bootstrap framework for visuals (CSS and JS), and HTML5 for the organization of its pages. The package also includes a Procfile and Dockerfile in case you wish to package the file and incorporate it into a larger platform. For more detailed developer documentation, please refer to the [CityScore technical documentation](https://docs.google.com/document/d/1DSqCxMvQBMcE0YVHX-wk2B0iVos3TG8Fp7jSiD5JkLk/edit?ts=57b22cac).
 
 ### Dependencies
-- Python 3.5
+- Python 2.7
 - pip
-- virtualenv
 
 ### Installation
 
@@ -48,7 +47,6 @@ This application was written in the Django programming framework using the Pytho
 #### Windows
 1. Open the command prompt on your computer (if you do not know how to do this, you can search for “command prompt” after clicking your “Start” button.
 2. Type in `cd /D C:/Downloads/cityscorewebapp-master` where the last part of that statement is the path you discovered above.
-3. Now type in the following exactly as you see here: `venv\bin\activate` You will see (venv) at the beginning of the new line. 
 5. Then, type in `pip install -r requirements.txt` and wait for dependencies to install.
 6. Once this finishes, type `python manage.py makemigrations`. You will see the following text in black and bold: 0014_auto_20160720_1254.py:
 7. Now type `python manage.py migrate`. If you see a warning about URLs, you need not worry.
@@ -62,10 +60,10 @@ System check identified 1 issue (0 silenced). July 20, 2016 - 12:56:36 Django ve
 
 1. Open the terminal application on your computer
 2. You should see a $ sign after your username in the terminal. Type in `cd /Users/username/Downloads/cityscore` where the last part of that statement is the path you discovered above.
-3. Now type in the following exactly as you see here: `source venv/bin/activate`
-4. You will see (venv) at the beginning of the new line. Once this occurs, type python manage.py makemigrations. You will see the following text in black and bold: 0014_auto_20160720_1254.py:
-5. Now type python manage.py migrate. If you see a warning about URLs, you need not worry.
-6. Finally, type in python manage.py runserver. You will see a paragraph like so: 
+3. Then, type in `pip install -r requirements.txt` and wait for dependencies to install.
+4. Then, type `python manage.py makemigrations`. You will see the following text in black and bold: 0014_auto_20160720_1254.py:
+5. Now type `python manage.py migrate`. If you see a warning about URLs, you need not worry.
+6. Finally, type in `python manage.py runserver`. You will see a paragraph like so: 
 ```
 System check identified 1 issue (0 silenced). July 20, 2016 - 12:56:36 Django version 1.9.7, using settings 'cityscorewebapp.settings' Starting development server at http://127.0.0.1:8000/ Quit the server with CONTROL-C. To access your now-functional webapp, simply go to the address of the "development server" your project lists (in this case, http://127.0.0.1:8000/). 
 ```

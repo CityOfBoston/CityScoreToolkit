@@ -1,1 +1,0 @@
-{"filter":false,"title":"Django - Stopped","tooltip":"Django - Stopped","undoManager":{"mark":-1,"position":-1,"stack":[]},"output":{"id":"output-defaultDjango","width":1037,"height":125,"scrollTop":-1,"config":{"command":"dumpdata","cwd":"/","default":true,"env":{},"name":"Django","runner":"Django"}},"hash":"da39a3ee5e6b4b0d3255bfef95601890afd80709"}
