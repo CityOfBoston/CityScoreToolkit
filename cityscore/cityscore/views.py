@@ -459,6 +459,7 @@ def analytics_page(request, name = "Library Users"):
             ax.spines["left"].set_visible(False)
             y = [s for s in score_list]
             x = [v.entry_date for v in values]
+            x, y = zip(*sorted(zip(x, y), key = lambda d: d[0]))
             ax.plot_date(x, y, '-')
             ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d'))
             fig.autofmt_xdate()
